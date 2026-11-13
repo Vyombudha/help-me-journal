@@ -24,7 +24,7 @@ import {
   Plus,
   AudioWaveformIcon,
 } from "lucide-react"
-import { readTitle } from "@/lib/utils"
+import { comingSoon, readTitle } from "@/lib/utils"
 import { useUser } from "@clerk/react"
 import { usePages } from "@/hooks/usePages"
 import { useNavigate, useParams } from "react-router-dom"
@@ -75,10 +75,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "Search",
         icon: Search,
+        onClick: () => {
+          comingSoon("AI Search")
+        },
       },
       {
         title: "Ask AI",
         icon: Sparkles,
+        onClick: () => {
+          comingSoon("Ask AI")
+        },
         toolText: "coming soon! ",
       },
       {

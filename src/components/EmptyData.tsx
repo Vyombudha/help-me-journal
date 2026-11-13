@@ -1,5 +1,6 @@
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { IconFolderCode } from "@tabler/icons-react"
-
 import { Button } from "@/components/ui/button"
 import {
   Empty,
@@ -9,20 +10,54 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import type { EmptyDataProps } from "@/types/EmptyData.types"
-import type { CreatePageDTO } from "@/types/dtos"
 import { useCreatePage } from "@/hooks/usePageMutations"
+import { useCreateWorkspace } from "@/hooks/useWorkspaceMutations" // your existing hook
 import { toast } from "./ui/toast"
-import { useNavigate } from "react-router-dom"
+import type { CreatePageDTO, CreateWorkspaceDTO } from "@/types/dtos"
+import CreateWorkspace from "./CreateWorkspace"
 
-// only handle Empty Workspace (i.e no pages for a workspace) but will also handle No Workspaces to later on
-export function EmptyData({ workspaceId }: EmptyDataProps) {
-  const newPageData: CreatePageDTO = {
-    title: "New Page",
-    moods: ["CALM", "HAPPY"],
-  }
+const newPageData: CreatePageDTO = {
+  title: "New Page",
+  moods: ["CALM", "HAPPY"],
+}
+
+export function EmptyData({ workspaceId }: { workspaceId?: string }) {
   const navigate = useNavigate()
-  const createPage = useCreatePage(workspaceId)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const createWorkspace = useCreateWorkspace()
+  const createPage = useCreatePage(workspaceId ?? "")
+
+  const hasWorkspace = !!workspaceId
+
+  const handleCreatePage = () => {
+    if (!workspaceId) return
+    toast.promise(
+      createPage.mutateAsync(newPageData).then((page) => {
+        navigate(`/w/${workspaceId}/p/${page.id}`)
+        return page
+      }),
+      {
+        loading: "Creating page",
+        success: "Page created",
+        error: "Failed to create page",
+      }
+    )
+  }
+
+  const handleCreateWorkspace = (data: CreateWorkspaceDTO) => {
+    toast.promise(
+      createWorkspace.mutateAsync(data).then((ws) => {
+        navigate(`/w/${ws.id}`)
+        return ws
+      }),
+      {
+        loading: "Creating workspace",
+        success: "Workspace created",
+        error: "Failed to create workspace",
+      }
+    )
+  }
+
   return (
     <div className="col-span-full flex h-2/3 w-full items-start">
       <Empty className="h-full w-full">
@@ -30,33 +65,33 @@ export function EmptyData({ workspaceId }: EmptyDataProps) {
           <EmptyMedia variant="icon">
             <IconFolderCode className="size-16 pb-2" />
           </EmptyMedia>
-          <EmptyTitle className="text-3xl">No Page's yet</EmptyTitle>
+          <EmptyTitle className="text-3xl">
+            {hasWorkspace ? "No pages yet" : "No workspaces yet"}
+          </EmptyTitle>
           <EmptyDescription className="text-xl">
-            You haven&apos;t created any pages' yet. Get started by creating
-            your first page.
+            {hasWorkspace
+              ? "You haven't created any pages yet. Get started by creating your first page."
+              : "Create a workspace to start organizing your pages."}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent className="flex-row justify-center gap-2">
-          <Button
-            onClick={() => {
-              toast.promise(
-                createPage.mutateAsync(newPageData).then((page) => {
-                  navigate(`/w/${workspaceId}/p/${page.id}`)
-                  return page
-                }),
-                {
-                  loading: "Creating Page",
-                  success: "Page Created",
-                  error: "Failed to Create Page",
-                }
-              )
-            }}
-            size={"lg"}
-          >
-            create page
-          </Button>
+          {hasWorkspace ? (
+            <Button size="lg" onClick={handleCreatePage}>
+              Create page
+            </Button>
+          ) : (
+            <Button size="lg" onClick={() => setDialogOpen(true)}>
+              Create workspace
+            </Button>
+          )}
         </EmptyContent>
       </Empty>
+
+      <CreateWorkspace
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onConfirm={handleCreateWorkspace}
+      />
     </div>
   )
 }

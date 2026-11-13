@@ -1,5 +1,6 @@
 import type { PartialBlock } from "@blocknote/core"
 import { api } from "@/lib/api"
+import { toast } from "@/components/ui/toast"
 
 type StoredBlock = {
   id?: string
@@ -19,6 +20,12 @@ export function readTitle(raw: string | undefined): string {
   }
 }
 
+export const comingSoon = (feature: string) => {
+  toast.add({
+    title: `${feature} Coming Soon!`,
+    description: "We're still working on this one.",
+  })
+}
 export const EMPTY_PAGE: PartialBlock[] = [
   { type: "heading", props: { level: 1 }, content: "Untitled Page" },
 ]

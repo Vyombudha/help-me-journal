@@ -5,7 +5,7 @@ import { ContainerTitle } from "./ContainerTitle"
 import { Skeleton } from "./ui/skeleton"
 import { EmptyData } from "./EmptyData"
 import { lazy, Suspense } from "react"
-const EntryCard = lazy(() => import("./EntryCard"))
+const Editor = lazy(() => import("./Editor"))
 
 const RenderContainerData = () => {
   const { pageId } = useParams<{ pageId: string }>()
@@ -43,7 +43,7 @@ const RenderContainerData = () => {
           </>
         }
       >
-        <EntryCard pageId={pageId!} content={page.content} />
+        <Editor pageId={pageId!} content={page.content} />
       </Suspense>
     </div>
   )

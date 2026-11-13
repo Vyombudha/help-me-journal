@@ -8,8 +8,9 @@ import { useUpdatePageContent } from "@/hooks/usePageMutations"
 import "@blocknote/core/fonts/inter.css"
 import { parseContent } from "@/lib/utils"
 import { useTheme } from "./theme-provider"
+import { toast } from "./ui/toast"
 
-export default function EntryCard({
+export default function Editor({
   pageId,
   content,
 }: {
@@ -17,21 +18,32 @@ export default function EntryCard({
   content: string
 }) {
   const { resolvedTheme } = useTheme()
-
   const save = useUpdatePageContent()
   const editor = useCreateBlockNote({ initialContent: parseContent(content) })
-
   const debouncedSave = useDebouncedCallback((blocks: Block[]) => {
-    save.mutate({ pageId: pageId, newContent: JSON.stringify(blocks) })
+    save.mutate(
+      { pageId, newContent: JSON.stringify(blocks) },
+      {
+        onError: () =>
+          toast.add({
+            type: "error",
+            title: "Failed to save",
+            description: "Your changes may be lost.",
+            timeout: 0,
+          }),
+      }
+    )
   }, 800)
 
-  // don't lose a pending save when switching containers
   useEffect(() => () => debouncedSave.flush(), [debouncedSave])
+
   return (
     <BlockNoteView
       editor={editor}
       theme={resolvedTheme}
-      onChange={() => debouncedSave(editor.document)}
+      onChange={() => {
+        debouncedSave(editor.document)
+      }}
     />
   )
 }

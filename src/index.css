@@ -1,10 +1,11 @@
+@layer theme, base, clerk, components, utilities;
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
 /* stylelint-disable at-rule-no-unknown */
 /* stylelint-enable at-rule-no-unknown */
-
+/* index.css, at the very top */
 @custom-variant dark (&:is(.dark *));
 @theme inline {
   --font-heading: var(--font-sans);

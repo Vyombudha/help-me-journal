@@ -16,7 +16,10 @@ createRoot(document.getElementById("root")!).render(
         <TooltipProvider>
           <ClerkProvider
             publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
-            appearance={shadcn}
+            appearance={{
+              theme: shadcn,
+              variables: { colorModalBackdrop: "rgba(0, 0, 0, 0.5)" },
+            }}
           >
             <App />
             <Toaster />
