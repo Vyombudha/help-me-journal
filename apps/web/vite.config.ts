@@ -5,7 +5,7 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/help-me-journal-frontend/",
+  base: "/help-me-journal/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

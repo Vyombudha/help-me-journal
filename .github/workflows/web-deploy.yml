@@ -1,8 +1,13 @@
-name: Deploy to Pages
+name: Deploy web to Pages
 
 on:
   push:
-    branches: [master]
+    branches: [main]
+    paths:
+      - "apps/web/**"
+      - "package.json"
+      - "bun.lock"
+      - ".github/workflows/web-deploy.yml"
   workflow_dispatch:
 
 permissions:
@@ -26,20 +31,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: bun run build
+        working-directory: apps/web
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
-          VITE_CLERK_PUBLISHABLE_KEY: ${{vars.VITE_CLERK_PUBLISHABLE_KEY}}
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -47,7 +50,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: apps/web/dist
 
       - name: Deploy
         id: deployment

@@ -1,8 +1,19 @@
-name: CI
+name: API CI
+
 on:
   pull_request:
+    paths:
+      - "apps/api/**"
+      - "package.json"
+      - "bun.lock"
+      - ".github/workflows/api-ci.yml"
   push:
     branches: [main]
+    paths:
+      - "apps/api/**"
+      - "package.json"
+      - "bun.lock"
+      - ".github/workflows/api-ci.yml"
 
 jobs:
   test:
@@ -12,3 +23,4 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun run test
+        working-directory: apps/api
