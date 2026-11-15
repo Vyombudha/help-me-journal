@@ -1,0 +1,78 @@
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { usePages } from "@/hooks/usePages"
+import { useWorkspaces } from "@/hooks/useWorkspaces"
+import { readTitle } from "@/lib/utils"
+import { Outlet, useParams } from "react-router-dom"
+
+export default function ProjectPage() {
+  const { workspaceId } = useParams<{ workspaceId: string }>()
+  const { pageId } = useParams<{ pageId: string }>()
+
+  const { data: workspaces } = useWorkspaces()
+  const workspaceName = workspaces?.find((ws) => ws.id === workspaceId)?.name
+  const { data: pages } = usePages(workspaceId!)
+  const pageName = readTitle(pages?.find((pg) => pg.id === pageId)?.title)
+
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href={workspaceId}>
+                    {workspaceName}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{pageName}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+          <div className="ml-auto px-4">
+            <a
+              href="https://github.com/Vyombudha/help-me-journal-frontend"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View source on GitHub"
+              title="View source on GitHub"
+              className="inline-flex size-9 items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              <img
+                src="https://cdn.simpleicons.org/github/white"
+                width="24"
+                alt=""
+              />
+            </a>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <Outlet />
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}
