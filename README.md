@@ -2,6 +2,8 @@
 
 An open-source, Notion-style notes and journaling app. Pages are written in a block editor, organized in workspaces, and (eventually) searchable and answerable through an AI assistant using RAG.
 
+![Help Me Journal demo](docs/help-me-journal-demo.gif)
+
 **Live app:** https://vyombudha.github.io/help-me-journal/
 
 > Work in progress. The editor, workspaces and sidebar work today. "Ask AI" (RAG over your own pages) is planned.
