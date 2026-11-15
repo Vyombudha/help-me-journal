@@ -1,0 +1,13 @@
+{
+  "name": "help-me-journal",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "trustedDependencies": [
+    "esbuild",
+    "workerd",
+    "@clerk/shared"
+  ]
+}
