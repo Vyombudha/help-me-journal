@@ -62,7 +62,9 @@ This includes the API URL (`VITE_API_URL`) and your Clerk publishable key (`VITE
 In two terminals:
 
 ```bash
-cd apps/api && bun run dev
+cd apps/api
+bun run db:local # migrate the d1 drizzle schema to local
+bun run dev
 ```
 
 ```bash
