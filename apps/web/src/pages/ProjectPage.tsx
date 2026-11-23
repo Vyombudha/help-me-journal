@@ -54,7 +54,7 @@ export default function ProjectPage() {
           </div>
           <div className="ml-auto px-4">
             <a
-              href="https://github.com/Vyombudha/help-me-journal-frontend"
+              href="https://github.com/Vyombudha/help-me-journal"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="View source on GitHub"

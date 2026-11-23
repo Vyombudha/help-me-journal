@@ -1,15 +1,18 @@
 import { useQuery } from "@tanstack/react-query"
 import { api } from "../lib/api"
-import type { PageDTO, SuccessResponse } from "@/types/dtos"
+import {
+  type GetAllPagesDTO,
+  type PageDTO,
+  type SuccessResponse,
+} from "@/types/dtos"
 
 export function usePages(workspaceId: string) {
   return useQuery({
     queryKey: ["pages", workspaceId],
     queryFn: async () => {
-      const { data } =
-        await api.get<SuccessResponse<Omit<PageDTO, "content">[]>>(
-          `/workspaces/${workspaceId}/pages`
-        )
+      const { data } = await api.get<SuccessResponse<GetAllPagesDTO[]>>(
+        `/workspaces/${workspaceId}/pages`
+      )
       return data.data
     },
     enabled: !!workspaceId,

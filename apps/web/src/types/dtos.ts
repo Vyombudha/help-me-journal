@@ -55,6 +55,11 @@ export interface PageDTO {
   updatedAt: string
 }
 
+export interface GetAllPagesDTO {
+  id: string
+  title: string
+}
+
 // ---- Request payloads ----
 // POST /api/v1/workspaces
 export interface CreateWorkspaceDTO {

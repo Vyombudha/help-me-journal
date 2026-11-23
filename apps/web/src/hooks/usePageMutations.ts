@@ -4,6 +4,7 @@ import {
   type PageDTO,
   type SuccessResponse,
   type UpdatePageContentDTO,
+  type UpdatePageIconDTO,
   type UpdatePageTitleDTO,
 } from "@/types/dtos"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -57,6 +58,27 @@ export function useUpdatePageContent() {
     }: UpdatePageContentDTO & { pageId: string }) => {
       const { data } = await api.patch<SuccessResponse<PageDTO>>(
         `/pages/${pageId}/content`,
+        updatedPageData
+      )
+      return data.data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["page", data.id],
+      })
+    },
+  })
+}
+
+export function useUpdatePageIcon() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      pageId,
+      ...updatedPageData
+    }: UpdatePageIconDTO & { pageId: string }) => {
+      const { data } = await api.patch<SuccessResponse<PageDTO>>(
+        `/pages/${pageId}/icon`,
         updatedPageData
       )
       return data.data
