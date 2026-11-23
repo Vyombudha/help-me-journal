@@ -3,6 +3,7 @@ import {
   type CreateWorkspaceDTO,
   type SuccessResponse,
   type UpdateWorkspaceDTO,
+  type UpdateWorkspaceIconDTO,
   type WorkspaceDTO,
 } from "@/types/dtos"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -33,6 +34,25 @@ export function useUpdateWorkspace() {
       const { data } = await api.patch<SuccessResponse<WorkspaceDTO>>(
         `/workspaces/${id}`,
         updatedWorkspace
+      )
+      return data.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workspaces"] })
+    },
+  })
+}
+
+export function useUpdateWorkspaceIcon() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      id,
+      ...updatedWorkspaceIcon
+    }: UpdateWorkspaceIconDTO & { id: string }) => {
+      const { data } = await api.patch<SuccessResponse<WorkspaceDTO>>(
+        `/workspaces/${id}/icon`,
+        updatedWorkspaceIcon
       )
       return data.data
     },

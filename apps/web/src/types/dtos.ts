@@ -1,5 +1,7 @@
 // Shared API types for Help Me Journal.
 
+import type { IconName } from "lucide-react/dynamic"
+
 // ---- Enums ----
 export const WORKSPACE_STATUSES = [
   "IN_PROGRESS",
@@ -35,6 +37,7 @@ export interface WorkspaceDTO {
   description: string
   isDefault: boolean
   ownerId: string
+  icon: IconName
   createdAt: string
   updatedAt: string
   status: WorkspaceStatus
@@ -47,6 +50,7 @@ export interface PageDTO {
   workspaceId: string
   templateConfig: Record<string, unknown> | null
   moods: Mood[]
+  icon: IconName
   createdAt: string
   updatedAt: string
 }
@@ -60,8 +64,13 @@ export interface CreateWorkspaceDTO {
 
 // PATCH /api/v1/workspaces/:workspaceId (both required)
 export interface UpdateWorkspaceDTO {
-  newName: string // trimmed, 1-100 chars
+  newName: string
   newDescription: string
+}
+
+// PATCH /api/v1/workspaces/:workspaceId/icon (both required)
+export interface UpdateWorkspaceIconDTO {
+  newIcon: IconName
 }
 
 // POST /api/v1/workspaces/:workspaceId/pages
@@ -78,6 +87,11 @@ export interface UpdatePageTitleDTO {
 // PATCH /api/v1/pages/:pageId/content
 export interface UpdatePageContentDTO {
   newContent: string // required, may be an empty string, no length limit
+}
+
+// PATCH /api/v1/pages/:pageId/icon
+export interface UpdatePageIconDTO {
+  newIcon: string // required, may be an empty string, no length limit
 }
 
 // ---- Responses ----

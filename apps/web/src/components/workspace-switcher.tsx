@@ -26,7 +26,7 @@ import { useNavigate, useParams } from "react-router-dom"
 type WorkspaceItem = {
   id: string
   name: string
-  logo: React.ElementType
+  logo: React.ReactNode
   status: WorkspaceStatus
 }
 
@@ -65,7 +65,7 @@ export function WorkspaceSwticher({
             }
           >
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <activeWorkspace.logo className="size-4" />
+              {activeWorkspace.logo}
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">
@@ -99,7 +99,9 @@ export function WorkspaceSwticher({
                   className="gap-2 p-2"
                 >
                   <div className="flex size-6 items-center justify-center rounded-md border">
-                    <workspace.logo className="size-3.5 shrink-0" />
+                    <span className="flex shrink-0 items-center [&>svg]:size-3.5 [&>svg]:shrink-0">
+                      {workspace.logo}
+                    </span>{" "}
                   </div>
                   {workspace.name}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
