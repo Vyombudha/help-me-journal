@@ -14,5 +14,13 @@ export const WorkspaceIdParamSchema = z.object({
   workspaceId: z.uuid(),
 });
 
+
+export const UpdateWorkspaceIconSchema = z.object({
+  newIcon: z.string().trim().max(64),
+})
+
+export type UpdateWorkspaceIconInput = z.infer<typeof UpdateWorkspaceIconSchema>;
+
+
 export type NewWorkspaceInput = z.infer<typeof NewWorkspaceSchema>;
 export type UpdateWorkspaceInput = z.infer<typeof UpdateWorkspaceSchema>;

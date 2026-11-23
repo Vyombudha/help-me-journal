@@ -7,6 +7,8 @@ import {
   type NewPageInput,
   type UpdatePageContentInput,
   type UpdatePageNameInput,
+  UpdatePageIconSchema,
+  UpdatePageIconInput,
 } from "./pages.schema.js";
 import { createFactory } from "hono/factory";
 import type { AppEnv } from "../../shared/types/hono.js";
@@ -101,6 +103,33 @@ const updatePageTitle = factory.createHandlers(
   },
 );
 
+
+const updatePageIcon = factory.createHandlers(
+  sValidator("param", PageIdParamSchema),
+  sValidator("json", UpdatePageIconSchema),
+  async (c) => {
+    const userId = c.get("userId");
+    const { pageId } = c.req.valid("param");
+    const body: UpdatePageIconInput = c.req.valid("json");
+
+    const updatedPage: Page = await PagesService.updateIcon(
+      userId,
+      pageId,
+      body.newIcon,
+    );
+
+    return c.json(
+      {
+        success: true,
+        data: updatedPage,
+      },
+      200,
+    );
+  },
+);
+
+
+
 const updatePageContent = factory.createHandlers(
   sValidator("param", PageIdParamSchema),
   sValidator("json", UpdatePageContentSchema),
@@ -148,6 +177,7 @@ export const PagesController = {
   get: getPage,
   getAll: getAllPages,
   updateTitle: updatePageTitle,
+  updateIcon : updatePageIcon,
   updateContent: updatePageContent,
   delete: deletePage,
 };

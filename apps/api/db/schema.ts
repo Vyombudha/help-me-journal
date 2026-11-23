@@ -49,6 +49,7 @@ export const workspaces = sqliteTable(
       .$defaultFn(() => crypto.randomUUID()),
     name: text("name").notNull(),
     description: text("description").notNull(),
+    icon: text("icon"),
     ownerId: text("owner_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
@@ -80,6 +81,7 @@ export const pages = sqliteTable("pages", {
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   content: text("content").default(""),
+  icon: text("icon"),
   workspaceId: text("workspace_id")
     .notNull()
     .references(() => workspaces.id, { onDelete: "cascade" }),

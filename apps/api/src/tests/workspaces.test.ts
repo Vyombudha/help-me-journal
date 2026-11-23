@@ -84,6 +84,55 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
   });
 });
 
+
+describe("PATCH /api/v1/workspaces/:workspaceId/icon", () => {
+  it("updates only the icon", async () => {
+    const app = makeApp();
+    await app.request("/api/v1/workspaces");
+
+    const [ws] = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.ownerId, USER_1.id));
+
+    const res = await app.request(
+      `/api/v1/workspaces/${ws!.id}/icon`,
+      json("PATCH", { newIcon  : "book" }),
+    );
+    expect(res.status).toBe(200);
+
+    const [after] = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.id, ws!.id));
+    expect(after?.icon).toBe("book");
+    expect(after?.name).toBe(ws.name) // untouched
+  });
+
+  it("rejects invalid fields", async () => {
+    const app = makeApp();
+    await app.request("/api/v1/workspaces");
+
+    const [ws] = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.ownerId, USER_1.id));
+
+    const res = await app.request(
+      `/api/v1/workspaces/${ws!.id}/icon`,
+      json("PATCH", { icon: "Renamed" }),
+    );
+    expect(res.status).toBe(400);
+
+    const [after] = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.id, ws!.id));
+    expect(after?.name).not.toBe("Renamed");
+    expect(after?.description).not.toBe("Renamed Description");
+  });
+});
+
 describe("DELETE /api/v1/workspaces/:workspaceId", () => {
   it("removes the workspace and its pages", async () => {
     const app = makeApp();

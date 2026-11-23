@@ -6,6 +6,9 @@ export const NewPageSchema = z.object({
   moods: z.array(z.enum(MOODS)),
 });
 
+
+
+
 export type NewPageInput = z.infer<typeof NewPageSchema>;
 
 export const UpdatePageNameSchema = z.object({
@@ -19,6 +22,13 @@ export const UpdatePageContentSchema = z.object({
 });
 
 export type UpdatePageContentInput = z.infer<typeof UpdatePageContentSchema>;
+
+export const UpdatePageIconSchema = z.object({
+  newIcon: z.string().trim().max(64),
+})
+
+export type UpdatePageIconInput = z.infer<typeof UpdatePageIconSchema>;
+
 
 export const PageIdParamSchema = z.object({
   pageId: z.uuid(),

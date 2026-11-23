@@ -5,6 +5,8 @@ import type { AppEnv } from "../../shared/types/hono.js";
 import { sValidator } from "@hono/standard-validator";
 import {
   NewWorkspaceSchema,
+  UpdateWorkspaceIconInput,
+  UpdateWorkspaceIconSchema,
   UpdateWorkspaceSchema,
   WorkspaceIdParamSchema,
   type NewWorkspaceInput,
@@ -92,6 +94,43 @@ const updateWorkspaceName = factory.createHandlers(
     );
   },
 );
+
+
+
+
+const updateWorkspaceIcon = factory.createHandlers(
+  sValidator("param", WorkspaceIdParamSchema),
+  sValidator("json", UpdateWorkspaceIconSchema),
+  async (c) => {
+    const userId = c.get("userId");
+    const { workspaceId } = c.req.valid("param");
+    const body: UpdateWorkspaceIconInput = c.req.valid("json");
+
+    const updatedWorkspace: Workspace = await WorkspacesService.updateIcon(
+      userId,
+      workspaceId,
+      body.newIcon,
+    );
+
+    return c.json(
+      {
+        success: true,
+        data: updatedWorkspace,
+      },
+      200,
+    );
+  },
+);
+
+
+
+
+
+
+
+
+
+
 const deleteWorkspace = factory.createHandlers(
   sValidator("param", WorkspaceIdParamSchema),
   async (c) => {
@@ -114,5 +153,6 @@ export const WorkspacesController = {
   get: getWorkspace,
   getAll: getAllWorkspaces,
   updateName: updateWorkspaceName,
+  updateIcon: updateWorkspaceIcon,
   delete: deleteWorkspace,
 };

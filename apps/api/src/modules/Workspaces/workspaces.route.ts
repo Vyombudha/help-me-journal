@@ -10,6 +10,7 @@ WorkspacesRouter.post("/", ...WorkspacesController.new);
 WorkspacesRouter.get("/:workspaceId", ...WorkspacesController.get);
 
 WorkspacesRouter.patch("/:workspaceId", ...WorkspacesController.updateName);
+WorkspacesRouter.patch("/:workspaceId/icon", ...WorkspacesController.updateIcon);
 
 WorkspacesRouter.delete("/:workspaceId", ...WorkspacesController.delete);
 
