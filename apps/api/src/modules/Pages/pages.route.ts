@@ -12,6 +12,8 @@ PagesRouter.patch("/:pageId/title", ...PagesController.updateTitle);
 
 PagesRouter.patch("/:pageId/content", ...PagesController.updateContent);
 
+PagesRouter.patch("/:pageId/icon", ...PagesController.updateIcon);
+
 PagesRouter.delete("/:pageId", ...PagesController.delete);
 
 // Mounted at /workspace/:workspaceId/Pages

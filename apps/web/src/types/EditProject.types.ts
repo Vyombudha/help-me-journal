@@ -1,7 +1,7 @@
-import type { UpdateWorkspaceDTO } from "./dtos"
+import type { UpdateWorkspaceInput } from "@help-me-journal/shared/schema"
 
 export type UpdateWorkspaceProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onConfirm: (newProjectData: UpdateWorkspaceDTO) => void
+  onConfirm: (newWorkspaceData: UpdateWorkspaceInput) => void
 }

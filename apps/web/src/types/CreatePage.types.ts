@@ -1,9 +1,10 @@
-import type { CreatePageDTO, Mood } from "./dtos"
+import type { Mood } from "@help-me-journal/shared/data/moods"
+import type { NewPageInput } from "@help-me-journal/shared/schema"
 
 export type CreatePageProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onConfirm: (newContainerData: CreatePageDTO) => void
+  onConfirm: (newPageData: NewPageInput) => void
 }
 
 export type MoodsGroupProps = {

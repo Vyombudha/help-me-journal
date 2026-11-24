@@ -69,6 +69,20 @@ const updatePageTitle = async (
   return page;
 };
 
+const updatePageIcon = async (
+  ownerId: string,
+  pageId: string,
+  newIcon: string,
+): Promise<Page> => {
+  const [page] = await db
+    .update(pages)
+    .set({ icon: newIcon })
+    .where(and(eq(pages.id, pageId), ownedBy(ownerId)))
+    .returning();
+  if (!page) throw new NotFoundError("Page not found");
+  return page;
+};
+
 const updatePageContent = async (
   ownerId: string,
   pageId: string,
@@ -97,5 +111,6 @@ export const PagesService = {
   getAll: getAllPages,
   updateTitle: updatePageTitle,
   updateContent: updatePageContent,
+  updateIcon: updatePageIcon,
   delete: deletePage,
 };

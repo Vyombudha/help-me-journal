@@ -1,17 +1,17 @@
 import { api } from "@/lib/api"
-import {
-  type CreatePageDTO,
-  type PageDTO,
-  type SuccessResponse,
-  type UpdatePageContentDTO,
-  type UpdatePageTitleDTO,
-} from "@/types/dtos"
+import { type PageDTO, type SuccessResponse } from "@/types/dtos"
+import type {
+  NewPageInput,
+  UpdatePageContentInput,
+  UpdatePageIconInput,
+  UpdatePageNameInput,
+} from "@help-me-journal/shared/schema"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export function useCreatePage(workspaceId: string) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (newPage: CreatePageDTO) => {
+    mutationFn: async (newPage: NewPageInput) => {
       const { data } = await api.post<SuccessResponse<PageDTO>>(
         `/workspaces/${workspaceId}/pages`,
         newPage
@@ -30,7 +30,7 @@ export function useUpdatePageTitle() {
     mutationFn: async ({
       pageId,
       ...updatedPageData
-    }: UpdatePageTitleDTO & { pageId: string }) => {
+    }: UpdatePageNameInput & { pageId: string }) => {
       const { data } = await api.patch<SuccessResponse<PageDTO>>(
         `/pages/${pageId}/title`,
         updatedPageData
@@ -54,9 +54,30 @@ export function useUpdatePageContent() {
     mutationFn: async ({
       pageId,
       ...updatedPageData
-    }: UpdatePageContentDTO & { pageId: string }) => {
+    }: UpdatePageContentInput & { pageId: string }) => {
       const { data } = await api.patch<SuccessResponse<PageDTO>>(
         `/pages/${pageId}/content`,
+        updatedPageData
+      )
+      return data.data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["page", data.id],
+      })
+    },
+  })
+}
+
+export function useUpdatePageIcon() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      pageId,
+      ...updatedPageData
+    }: UpdatePageIconInput & { pageId: string }) => {
+      const { data } = await api.patch<SuccessResponse<PageDTO>>(
+        `/pages/${pageId}/icon`,
         updatedPageData
       )
       return data.data

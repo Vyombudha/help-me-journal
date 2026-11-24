@@ -1,24 +1,8 @@
 // Shared API types for Help Me Journal.
 
-// ---- Enums ----
-export const WORKSPACE_STATUSES = [
-  "IN_PROGRESS",
-  "COMPLETED",
-  "ABANDONED",
-] as const
-export type WorkspaceStatus = (typeof WORKSPACE_STATUSES)[number]
-
-export const MOODS = [
-  "HAPPY",
-  "CALM",
-  "SAD",
-  "ANGRY",
-  "ANXIOUS",
-  "EXCITED",
-  "TIRED",
-  "NEUTRAL",
-] as const
-export type Mood = (typeof MOODS)[number]
+import type { Mood } from "@help-me-journal/shared/data/moods"
+import type { WorkspaceStatus } from "@help-me-journal/shared/data/statuses"
+import type { IconName } from "lucide-react/dynamic"
 
 // ---- Resources ----
 export interface UserDTO {
@@ -35,6 +19,7 @@ export interface WorkspaceDTO {
   description: string
   isDefault: boolean
   ownerId: string
+  icon: IconName
   createdAt: string
   updatedAt: string
   status: WorkspaceStatus
@@ -47,39 +32,16 @@ export interface PageDTO {
   workspaceId: string
   templateConfig: Record<string, unknown> | null
   moods: Mood[]
+  icon: IconName
   createdAt: string
   updatedAt: string
 }
 
-// ---- Request payloads ----
-// POST /api/v1/workspaces
-export interface CreateWorkspaceDTO {
-  name: string // trimmed, 1-30 chars, unique per owner
-  description: string // 1-200 chars
+export interface GetAllPagesDTO {
+  id: string
+  title: string
+  icon: IconName
 }
-
-// PATCH /api/v1/workspaces/:workspaceId (both required)
-export interface UpdateWorkspaceDTO {
-  newName: string // trimmed, 1-100 chars
-  newDescription: string
-}
-
-// POST /api/v1/workspaces/:workspaceId/pages
-export interface CreatePageDTO {
-  title: string // trimmed, 1-500 chars, unique per workspace
-  moods: Mood[] // required, may be empty
-}
-
-// PATCH /api/v1/pages/:pageId/title
-export interface UpdatePageTitleDTO {
-  newTitle: string
-}
-
-// PATCH /api/v1/pages/:pageId/content
-export interface UpdatePageContentDTO {
-  newContent: string // required, may be an empty string, no length limit
-}
-
 // ---- Responses ----
 export interface SuccessResponse<T> {
   success: true

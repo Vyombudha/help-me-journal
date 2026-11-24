@@ -108,8 +108,25 @@ describe("PATCH /api/v1/pages/:pageId", () => {
       .select()
       .from(pages)
       .where(and(eq(pages.id, pageId), eq(pages.workspaceId, workspaceId)));
-    expect(after?.title).toBe("secret");
-    expect(after?.content).toBe("[Renamed]"); // untouched
+    expect(after?.title).toBe("secret"); // untouched
+    expect(after?.content).toBe("[Renamed]");
+  });
+
+  it("updates only on icon", async () => {
+    const app = makeApp();
+
+    const res = await app.request(
+      `/api/v1/pages/${pageId}/icon`,
+      json("PATCH", { newIcon: "books" }),
+    );
+    expect(res.status).toBe(200);
+
+    const [after] = await db
+      .select()
+      .from(pages)
+      .where(and(eq(pages.id, pageId), eq(pages.workspaceId, workspaceId)));
+    expect(after?.title).toBe("secret");// untouched
+    expect(after?.icon).toBe("books");
   });
 });
 

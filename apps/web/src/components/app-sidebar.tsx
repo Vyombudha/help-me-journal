@@ -1,4 +1,5 @@
 import * as React from "react"
+import { DynamicIcon } from "lucide-react/dynamic"
 
 import { NavMain } from "@/components/nav-main"
 import { NavPages } from "@/components/nav-pages"
@@ -16,14 +17,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-import {
-  Search,
-  Sparkles,
-  Home,
-  FrameIcon,
-  Plus,
-  AudioWaveformIcon,
-} from "lucide-react"
+import { Search, Sparkles, Home, Plus } from "lucide-react"
 import { comingSoon, readTitle } from "@/lib/utils"
 import { useUser } from "@clerk/react"
 import { usePages } from "@/hooks/usePages"
@@ -31,7 +25,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useWorkspaces } from "@/hooks/useWorkspaces"
 import { WorkspaceSwticher } from "./workspace-switcher"
 import { useCreatePage } from "@/hooks/usePageMutations"
-import type { CreatePageDTO } from "@/types/dtos"
+import type { NewPageInput } from "@help-me-journal/shared/schema"
 import { toast } from "./ui/toast"
 import { NavUser } from "./nav-user"
 
@@ -43,7 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser()
   const createPage = useCreatePage(workspaceId!)
   const navigate = useNavigate()
-  const newPageData: CreatePageDTO = {
+  const newPageData: NewPageInput = {
     title: "New Page",
     moods: ["CALM", "HAPPY"],
   }
@@ -53,13 +47,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       name: readTitle(page.title),
       url: `w/${workspaceId}/p/${page.id}`,
       isActive: pageId === page.id,
-      icon: <FrameIcon />,
+      icon: <DynamicIcon name={page.icon ?? "frame"} />,
     })) ?? []
   const workspaceItems =
     workspaces?.map((workspace) => ({
       id: workspace.id,
       name: workspace.name,
-      logo: AudioWaveformIcon,
+      logo: <DynamicIcon name={workspace.icon ?? "audio-lines"} />,
       status: workspace.status,
     })) ?? []
   const sidebarUser = {

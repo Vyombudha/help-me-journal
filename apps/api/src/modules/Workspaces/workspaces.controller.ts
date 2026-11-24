@@ -9,7 +9,7 @@ import {
   WorkspaceIdParamSchema,
   type NewWorkspaceInput,
   type UpdateWorkspaceInput,
-} from "./workspaces.schema.js";
+} from "@help-me-journal/shared/schema";
 import { Workspace } from "../../../db/schema.js";
 
 const factory = createFactory<AppEnv>();
@@ -23,6 +23,7 @@ const newWorkspace = factory.createHandlers(
       userId,
       body.name,
       body.description,
+      body.icon,
     );
     return c.json(
       {
@@ -68,7 +69,7 @@ const getWorkspace = factory.createHandlers(
   },
 );
 
-const updateWorkspaceName = factory.createHandlers(
+const updateWorkspace = factory.createHandlers(
   sValidator("param", WorkspaceIdParamSchema),
   sValidator("json", UpdateWorkspaceSchema),
   async (c) => {
@@ -76,11 +77,12 @@ const updateWorkspaceName = factory.createHandlers(
     const { workspaceId } = c.req.valid("param");
     const body: UpdateWorkspaceInput = c.req.valid("json");
 
-    const updatedWorkspace: Workspace = await WorkspacesService.updateName(
+    const updatedWorkspace: Workspace = await WorkspacesService.update(
       userId,
       workspaceId,
       body.newName,
       body.newDescription,
+      body.newIcon,
     );
 
     return c.json(
@@ -92,6 +94,7 @@ const updateWorkspaceName = factory.createHandlers(
     );
   },
 );
+
 const deleteWorkspace = factory.createHandlers(
   sValidator("param", WorkspaceIdParamSchema),
   async (c) => {
@@ -113,6 +116,6 @@ export const WorkspacesController = {
   new: newWorkspace,
   get: getWorkspace,
   getAll: getAllWorkspaces,
-  updateName: updateWorkspaceName,
+  update: updateWorkspace,
   delete: deleteWorkspace,
 };

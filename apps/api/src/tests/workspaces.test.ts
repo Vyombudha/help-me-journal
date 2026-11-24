@@ -16,6 +16,7 @@ describe("POST /api/v1/workspaces", () => {
       json("POST", {
         name: "WORKSPACE FOR USER 1",
         description: "IT IS THE WORKSPACE FOR TEST STUFF",
+        icon: "book-open",
       }),
     );
     expect(res.status).toBe(200);
@@ -48,7 +49,11 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
 
     const res = await app.request(
       `/api/v1/workspaces/${ws!.id}`,
-      json("PATCH", { newName: "Renamed", newDescription: ws!.description }),
+      json("PATCH", {
+        newName: "Renamed",
+        newDescription: ws!.description,
+        newIcon: "book-open",
+      }),
     );
     expect(res.status).toBe(200);
 
@@ -93,6 +98,7 @@ describe("DELETE /api/v1/workspaces/:workspaceId", () => {
       json("POST", {
         name: "my workspace",
         description: "This workspace exists",
+        icon: "book-open",
       }),
     );
     expect(createRes.status).toBe(200);
@@ -120,7 +126,11 @@ describe("IDOR: user 2 cannot touch user 1's workspace", () => {
     // user 1 creates a workspace
     const res = await makeApp(USER_1).request(
       "/api/v1/workspaces",
-      json("POST", { name: "private", description: "user 1 only" }),
+      json("POST", {
+        name: "private",
+        description: "user 1 only",
+        icon: "book-open",
+      }),
     );
     const body = (await res.json()) as any;
     wsId = body.data.id;
@@ -145,7 +155,11 @@ describe("IDOR: user 2 cannot touch user 1's workspace", () => {
 
     const res = await makeApp(USER_2).request(
       `/api/v1/workspaces/${wsId}`,
-      json("PATCH", { newName: "hacked", newDescription: "hacked workspace" }),
+      json("PATCH", {
+        newName: "hacked",
+        newDescription: "hacked workspace",
+        newIcon: "book-open",
+      }),
     );
     expect(res.status).toBe(404);
 

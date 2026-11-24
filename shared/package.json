@@ -1,0 +1,15 @@
+{
+  "name": "@help-me-journal/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./icons": "./data/pageIcons.ts",
+    "./data/*": "./data/*.ts",
+    "./schema": "./schema/index.ts",
+    "./schema/*": "./schema/*.ts"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
+  }
+}

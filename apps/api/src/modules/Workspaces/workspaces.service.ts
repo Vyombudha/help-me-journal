@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "../../../db";
 import { workspaces, type Workspace } from "../../../db/schema";
 import { NotFoundError } from "../../shared/errors/AppError";
+import type { PageIconName } from "@help-me-journal/shared/icons";
 
 const getAll = (ownerId: string): Promise<Workspace[]> =>
   db.select().from(workspaces).where(eq(workspaces.ownerId, ownerId));
@@ -10,10 +11,11 @@ const create = async (
   ownerId: string,
   name: string,
   description: string,
+  icon: PageIconName,
 ): Promise<Workspace> => {
   const [ws] = await db
     .insert(workspaces)
-    .values({ ownerId, name, description })
+    .values({ ownerId, name, description, icon })
     .returning();
   return ws!;
 };
@@ -58,15 +60,16 @@ const get = async (
   return ws;
 };
 
-const updateName = async (
+const update = async (
   ownerId: string,
   workspaceId: string,
   newName: string,
   newDescription: string,
+  newIcon: PageIconName,
 ): Promise<Workspace> => {
   const [ws] = await db
     .update(workspaces)
-    .set({ name: newName, description: newDescription })
+    .set({ name: newName, description: newDescription, icon: newIcon })
     .where(and(eq(workspaces.id, workspaceId), eq(workspaces.ownerId, ownerId)))
     .returning();
   if (!ws) throw new NotFoundError();
@@ -85,6 +88,6 @@ export const WorkspacesService = {
   get,
   new: create,
   getAllOrCreateDefault,
-  updateName,
+  update,
   delete: remove,
 };
