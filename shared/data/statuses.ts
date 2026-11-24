@@ -3,3 +3,4 @@ export const WORKSPACE_STATUSES = [
   "COMPLETED",
   "ABANDONED",
 ] as const;
+export type WorkspaceStatus = (typeof WORKSPACE_STATUSES)[number];

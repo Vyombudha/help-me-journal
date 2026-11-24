@@ -1,4 +1,4 @@
-import { PAGE_ICONS, type PageIconName } from "@/data/icons"
+import { PAGE_ICONS, type PageIconName } from "@help-me-journal/shared/icons"
 import { ScrollArea } from "./ui/scroll-area"
 import { DynamicIcon } from "lucide-react/dynamic"
 import { Button } from "@base-ui/react"

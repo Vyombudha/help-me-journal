@@ -15,6 +15,8 @@ import type { CreateWorkspaceProps } from "@/types/CreateWorkspace.types"
 import IconPicker from "./IconPicker"
 import { useState } from "react"
 import type { PageIconName } from "@help-me-journal/shared/icons"
+import { NewWorkspaceSchema } from "@help-me-journal/shared/schema"
+import { toast } from "./ui/toast"
 export default function CreateWorkspace({
   open,
   onOpenChange,
@@ -24,9 +26,21 @@ export default function CreateWorkspace({
   function handleSubmission(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    const name = formData.get("name") as string
-    const description = formData.get("description") as string
-    onConfirm({ name, description, icon: iconName })
+    const result = NewWorkspaceSchema.safeParse({
+      name: formData.get("name"),
+      description: formData.get("description"),
+      icon: iconName,
+    })
+
+    if (!result.success) {
+      toast.add({
+        title: "Failed To Create Your Workspace",
+        description: result.error.issues[0].message,
+      })
+      return
+    }
+
+    onConfirm(result.data) // trimmed, validated, correctly typed
     onOpenChange(false) // close the dialog after confirming
   }
 

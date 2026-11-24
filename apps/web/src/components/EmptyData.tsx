@@ -13,10 +13,13 @@ import {
 import { useCreatePage } from "@/hooks/usePageMutations"
 import { useCreateWorkspace } from "@/hooks/useWorkspaceMutations" // your existing hook
 import { toast } from "./ui/toast"
-import type { CreatePageDTO, CreateWorkspaceDTO } from "@/types/dtos"
+import type {
+  NewPageInput,
+  NewWorkspaceInput,
+} from "@help-me-journal/shared/schema"
 import CreateWorkspace from "./CreateWorkspace"
 
-const newPageData: CreatePageDTO = {
+const newPageData: NewPageInput = {
   title: "New Page",
   moods: ["CALM", "HAPPY"],
 }
@@ -44,7 +47,7 @@ export function EmptyData({ workspaceId }: { workspaceId?: string }) {
     )
   }
 
-  const handleCreateWorkspace = (data: CreateWorkspaceDTO) => {
+  const handleCreateWorkspace = (data: NewWorkspaceInput) => {
     toast.promise(
       createWorkspace.mutateAsync(data).then((ws) => {
         navigate(`/w/${ws.id}`)

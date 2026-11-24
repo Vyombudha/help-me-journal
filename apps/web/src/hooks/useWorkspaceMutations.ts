@@ -1,17 +1,17 @@
 import { api } from "@/lib/api"
-import {
-  type CreateWorkspaceDTO,
-  type SuccessResponse,
-  type UpdateWorkspaceDTO,
-  type UpdateWorkspaceIconDTO,
-  type WorkspaceDTO,
-} from "@/types/dtos"
+import type { SuccessResponse, WorkspaceDTO } from "@/types/dtos"
+import type {
+  NewWorkspaceInput,
+  UpdateWorkspaceIconInput,
+  UpdateWorkspaceInput,
+} from "@help-me-journal/shared/schema"
+
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export function useCreateWorkspace() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (newWorkspace: CreateWorkspaceDTO) => {
+    mutationFn: async (newWorkspace: NewWorkspaceInput) => {
       const { data } = await api.post<SuccessResponse<WorkspaceDTO>>(
         "/workspaces",
         newWorkspace
@@ -30,7 +30,7 @@ export function useUpdateWorkspace() {
     mutationFn: async ({
       id,
       ...updatedWorkspace
-    }: UpdateWorkspaceDTO & { id: string }) => {
+    }: UpdateWorkspaceInput & { id: string }) => {
       const { data } = await api.patch<SuccessResponse<WorkspaceDTO>>(
         `/workspaces/${id}`,
         updatedWorkspace
@@ -49,7 +49,7 @@ export function useUpdateWorkspaceIcon() {
     mutationFn: async ({
       id,
       ...updatedWorkspaceIcon
-    }: UpdateWorkspaceIconDTO & { id: string }) => {
+    }: UpdateWorkspaceIconInput & { id: string }) => {
       const { data } = await api.patch<SuccessResponse<WorkspaceDTO>>(
         `/workspaces/${id}/icon`,
         updatedWorkspaceIcon

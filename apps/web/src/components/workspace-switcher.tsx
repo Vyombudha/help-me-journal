@@ -1,6 +1,6 @@
 import * as React from "react"
 import { ChevronsUpDown, Plus } from "lucide-react"
-
+import type { WorkspaceStatus } from "@help-me-journal/shared/data/statuses"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import type { CreateWorkspaceDTO, WorkspaceStatus } from "@/types/dtos"
+import type { NewWorkspaceInput } from "@help-me-journal/shared/schema"
 import CreateWorkspace from "./CreateWorkspace"
 import { useCreateWorkspace } from "@/hooks/useWorkspaceMutations"
 import { toast } from "./ui/toast"
@@ -125,7 +125,7 @@ export function WorkspaceSwticher({
         <CreateWorkspace
           open={menuOpen}
           onOpenChange={setMenuOpen}
-          onConfirm={(newWsData: CreateWorkspaceDTO) => {
+          onConfirm={(newWsData: NewWorkspaceInput) => {
             toast.promise(createWorkspace.mutateAsync(newWsData), {
               loading: `Creating Workspace`,
               success: `Workspace Created`,

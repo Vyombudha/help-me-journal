@@ -1,26 +1,8 @@
 // Shared API types for Help Me Journal.
 
+import type { Mood } from "@help-me-journal/shared/data/moods"
+import type { WorkspaceStatus } from "@help-me-journal/shared/data/statuses"
 import type { IconName } from "lucide-react/dynamic"
-
-// ---- Enums ----
-export const WORKSPACE_STATUSES = [
-  "IN_PROGRESS",
-  "COMPLETED",
-  "ABANDONED",
-] as const
-export type WorkspaceStatus = (typeof WORKSPACE_STATUSES)[number]
-
-export const MOODS = [
-  "HAPPY",
-  "CALM",
-  "SAD",
-  "ANGRY",
-  "ANXIOUS",
-  "EXCITED",
-  "TIRED",
-  "NEUTRAL",
-] as const
-export type Mood = (typeof MOODS)[number]
 
 // ---- Resources ----
 export interface UserDTO {

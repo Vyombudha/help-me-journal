@@ -1,7 +1,7 @@
-import type { UpdatePageTitleDTO } from "./dtos"
+import type { UpdatePageNameInput } from "@help-me-journal/shared/schema"
 
 export type UpdateContainerProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onConfirm: (newContainerData: UpdatePageTitleDTO) => void
+  onConfirm: (newContainerData: UpdatePageNameInput) => void
 }

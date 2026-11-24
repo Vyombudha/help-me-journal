@@ -25,7 +25,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useWorkspaces } from "@/hooks/useWorkspaces"
 import { WorkspaceSwticher } from "./workspace-switcher"
 import { useCreatePage } from "@/hooks/usePageMutations"
-import type { CreatePageDTO } from "@help-me-journal/shared/schema/"
+import type { NewPageInput } from "@help-me-journal/shared/schema"
 import { toast } from "./ui/toast"
 import { NavUser } from "./nav-user"
 
@@ -37,7 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser()
   const createPage = useCreatePage(workspaceId!)
   const navigate = useNavigate()
-  const newPageData: CreatePageDTO = {
+  const newPageData: NewPageInput = {
     title: "New Page",
     moods: ["CALM", "HAPPY"],
   }
