@@ -11,7 +11,7 @@ import {
   WorkspaceIdParamSchema,
   type NewWorkspaceInput,
   type UpdateWorkspaceInput,
-} from "./workspaces.schema.js";
+} from "@help-me-journal/shared/schema";
 import { Workspace } from "../../../db/schema.js";
 
 const factory = createFactory<AppEnv>();

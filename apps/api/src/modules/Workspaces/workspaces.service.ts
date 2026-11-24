@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "../../../db";
 import { workspaces, type Workspace } from "../../../db/schema";
 import { NotFoundError } from "../../shared/errors/AppError";
-import type { PageIconName } from "../../shared/types/icons";
+import type { PageIconName } from "@help-me-journal/shared/icons";
 
 const getAll = (ownerId: string): Promise<Workspace[]> =>
   db.select().from(workspaces).where(eq(workspaces.ownerId, ownerId));

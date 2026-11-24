@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PAGE_ICONS } from "../../shared/types/icons";
+import { PAGE_ICONS } from "../data/pageIcons";
 
 export const NewWorkspaceSchema = z.object({
   name: z.string().trim().min(1).max(100),

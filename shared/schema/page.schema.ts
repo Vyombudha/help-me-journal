@@ -1,13 +1,10 @@
 import { z } from "zod";
-import { MOODS } from "../../../db/schema";
+import { MOODS } from "../data/moods";
 
 export const NewPageSchema = z.object({
   title: z.string().trim().min(5).max(100),
   moods: z.array(z.enum(MOODS)),
 });
-
-
-
 
 export type NewPageInput = z.infer<typeof NewPageSchema>;
 
@@ -25,10 +22,9 @@ export type UpdatePageContentInput = z.infer<typeof UpdatePageContentSchema>;
 
 export const UpdatePageIconSchema = z.object({
   newIcon: z.string().trim().max(64),
-})
+});
 
 export type UpdatePageIconInput = z.infer<typeof UpdatePageIconSchema>;
-
 
 export const PageIdParamSchema = z.object({
   pageId: z.uuid(),

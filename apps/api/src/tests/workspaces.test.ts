@@ -3,7 +3,6 @@ import { db } from "../../db";
 import { pages, users, workspaces } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { USER_1, USER_2, makeApp, json } from "./test.setup";
-import { PageIconName } from "../shared/types/icons";
 
 beforeEach(async () => {
   await db.delete(users);

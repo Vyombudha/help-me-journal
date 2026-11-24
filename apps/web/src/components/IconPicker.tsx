@@ -1,11 +1,11 @@
-import { PAGE_ICONS } from "@/data/icons"
+import { PAGE_ICONS, type PageIconName } from "@/data/icons"
 import { ScrollArea } from "./ui/scroll-area"
-import { DynamicIcon, type IconName } from "lucide-react/dynamic"
+import { DynamicIcon } from "lucide-react/dynamic"
 import { Button } from "@base-ui/react"
 
 type IconPickerProps = {
   value?: string
-  onChange: (icon: IconName) => void
+  onChange: (icon: PageIconName) => void
 }
 
 function IconPicker({ value, onChange }: IconPickerProps) {

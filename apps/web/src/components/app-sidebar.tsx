@@ -25,7 +25,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useWorkspaces } from "@/hooks/useWorkspaces"
 import { WorkspaceSwticher } from "./workspace-switcher"
 import { useCreatePage } from "@/hooks/usePageMutations"
-import type { CreatePageDTO } from "@/types/dtos"
+import type { CreatePageDTO } from "@help-me-journal/shared/schema/"
 import { toast } from "./ui/toast"
 import { NavUser } from "./nav-user"
 

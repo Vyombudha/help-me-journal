@@ -3,11 +3,14 @@
   "private": true,
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "shared"
   ],
   "trustedDependencies": [
     "esbuild",
     "workerd",
     "@clerk/shared"
-  ]
+  ],
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
 }

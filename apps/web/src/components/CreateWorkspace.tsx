@@ -14,20 +14,19 @@ import { Label } from "@/components/ui/label"
 import type { CreateWorkspaceProps } from "@/types/CreateWorkspace.types"
 import IconPicker from "./IconPicker"
 import { useState } from "react"
-import type { IconName } from "lucide-react/dynamic"
+import type { PageIconName } from "@help-me-journal/shared/icons"
 export default function CreateWorkspace({
   open,
   onOpenChange,
   onConfirm,
 }: CreateWorkspaceProps) {
-  const [iconName, setIconName] = useState<IconName>("audio-lines")
+  const [iconName, setIconName] = useState<PageIconName>("audio-lines")
   function handleSubmission(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     const name = formData.get("name") as string
     const description = formData.get("description") as string
-
-    onConfirm({ name, description })
+    onConfirm({ name, description, icon: iconName })
     onOpenChange(false) // close the dialog after confirming
   }
 
@@ -46,14 +45,14 @@ export default function CreateWorkspace({
           <FieldGroup>
             <Field>
               <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" />
+              <Input id="name-1" name="name" required />
             </Field>
             <Field>
               <Label htmlFor="description-1">Description</Label>
-              <Input id="description-1" name="description" />
+              <Input id="description-1" name="description" required />
             </Field>
             <Field>
-              <Label htmlFor="icon">Icon</Label>
+              <Label>Icon</Label>
               <IconPicker
                 value={iconName}
                 onChange={(icon) => setIconName(icon)}

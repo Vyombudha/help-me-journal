@@ -1,0 +1,25 @@
+export const PAGE_ICONS = [
+  "file-text",
+  "file",
+  "notebook-pen",
+  "sticky-note",
+  "scroll-text",
+  "layout-dashboard",
+  "layers",
+  "folder-open",
+  "briefcase",
+  "building-2",
+  "book-open",
+  "library",
+  "lightbulb",
+  "brain",
+  "bookmark",
+  "audio-lines",
+  "check-square",
+  "calendar",
+  "target",
+  "kanban",
+  "rocket",
+] as const;
+
+export type PageIconName = (typeof PAGE_ICONS)[number];

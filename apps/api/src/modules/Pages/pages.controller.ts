@@ -9,11 +9,11 @@ import {
   type UpdatePageNameInput,
   UpdatePageIconSchema,
   UpdatePageIconInput,
-} from "./pages.schema.js";
+} from "@help-me-journal/shared/schema";
 import { createFactory } from "hono/factory";
 import type { AppEnv } from "../../shared/types/hono.js";
 import { sValidator } from "@hono/standard-validator";
-import { WorkspaceIdParamSchema } from "../Workspaces/workspaces.schema.js";
+import { WorkspaceIdParamSchema } from "@help-me-journal/shared/schema";
 import { Page } from "../../../db/schema.js";
 
 const factory = createFactory<AppEnv>();
@@ -103,7 +103,6 @@ const updatePageTitle = factory.createHandlers(
   },
 );
 
-
 const updatePageIcon = factory.createHandlers(
   sValidator("param", PageIdParamSchema),
   sValidator("json", UpdatePageIconSchema),
@@ -127,8 +126,6 @@ const updatePageIcon = factory.createHandlers(
     );
   },
 );
-
-
 
 const updatePageContent = factory.createHandlers(
   sValidator("param", PageIdParamSchema),
@@ -177,7 +174,7 @@ export const PagesController = {
   get: getPage,
   getAll: getAllPages,
   updateTitle: updatePageTitle,
-  updateIcon : updatePageIcon,
+  updateIcon: updatePageIcon,
   updateContent: updatePageContent,
   delete: deletePage,
 };
