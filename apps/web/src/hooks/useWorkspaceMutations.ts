@@ -2,7 +2,6 @@ import { api } from "@/lib/api"
 import type { SuccessResponse, WorkspaceDTO } from "@/types/dtos"
 import type {
   NewWorkspaceInput,
-  UpdateWorkspaceIconInput,
   UpdateWorkspaceInput,
 } from "@help-me-journal/shared/schema"
 
@@ -34,25 +33,6 @@ export function useUpdateWorkspace() {
       const { data } = await api.patch<SuccessResponse<WorkspaceDTO>>(
         `/workspaces/${id}`,
         updatedWorkspace
-      )
-      return data.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] })
-    },
-  })
-}
-
-export function useUpdateWorkspaceIcon() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: async ({
-      id,
-      ...updatedWorkspaceIcon
-    }: UpdateWorkspaceIconInput & { id: string }) => {
-      const { data } = await api.patch<SuccessResponse<WorkspaceDTO>>(
-        `/workspaces/${id}/icon`,
-        updatedWorkspaceIcon
       )
       return data.data
     },
