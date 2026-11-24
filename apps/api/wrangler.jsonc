@@ -11,4 +11,7 @@
       "migrations_dir": "./db/migrations",
     },
   ],
+  "vars": {
+    "FRONTEND_URL": "https://vyombudha.github.io",
+  },
 }
