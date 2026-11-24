@@ -58,6 +58,7 @@ export interface PageDTO {
 export interface GetAllPagesDTO {
   id: string
   title: string
+  icon: IconName
 }
 
 // ---- Request payloads ----

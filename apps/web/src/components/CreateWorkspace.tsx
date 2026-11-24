@@ -12,11 +12,15 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { CreateWorkspaceProps } from "@/types/CreateWorkspace.types"
+import IconPicker from "./IconPicker"
+import { useState } from "react"
+import type { IconName } from "lucide-react/dynamic"
 export default function CreateWorkspace({
   open,
   onOpenChange,
   onConfirm,
 }: CreateWorkspaceProps) {
+  const [iconName, setIconName] = useState<IconName>("audio-lines")
   function handleSubmission(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
@@ -42,14 +46,17 @@ export default function CreateWorkspace({
           <FieldGroup>
             <Field>
               <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" placeholder="Privacy Drive" />
+              <Input id="name-1" name="name" />
             </Field>
             <Field>
               <Label htmlFor="description-1">Description</Label>
-              <Input
-                id="description-1"
-                name="description"
-                placeholder="A clone of google drive made in go lang"
+              <Input id="description-1" name="description" />
+            </Field>
+            <Field>
+              <Label htmlFor="icon">Icon</Label>
+              <IconPicker
+                value={iconName}
+                onChange={(icon) => setIconName(icon)}
               />
             </Field>
           </FieldGroup>

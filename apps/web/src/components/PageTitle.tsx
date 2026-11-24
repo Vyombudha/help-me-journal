@@ -9,7 +9,7 @@ import type { PageDTO } from "@/types/dtos"
 
 type PageListItem = Omit<PageDTO, "content">
 
-export function ContainerTitle({
+export default function PageTitle({
   pageId,
   title,
 }: {

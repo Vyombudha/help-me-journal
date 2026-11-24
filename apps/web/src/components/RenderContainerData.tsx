@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { usePage, usePages } from "@/hooks/usePages"
 
-import { ContainerTitle } from "./ContainerTitle"
+import PageTitle from "./PageTitle"
 import { Skeleton } from "./ui/skeleton"
 import { EmptyData } from "./EmptyData"
 import { lazy, Suspense } from "react"
@@ -31,7 +31,7 @@ const RenderContainerData = () => {
       key={page.id}
       className="flex h-full w-full flex-col gap-4 px-4 sm:px-8 [&_.bn-editor]:px-0!"
     >
-      <ContainerTitle pageId={pageId!} title={page.title} />
+      <PageTitle pageId={pageId!} title={page.title} />
       <Suspense
         fallback={
           <>

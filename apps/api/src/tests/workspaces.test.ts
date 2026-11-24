@@ -3,6 +3,7 @@ import { db } from "../../db";
 import { pages, users, workspaces } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { USER_1, USER_2, makeApp, json } from "./test.setup";
+import { PageIconName } from "../shared/types/icons";
 
 beforeEach(async () => {
   await db.delete(users);
@@ -16,6 +17,7 @@ describe("POST /api/v1/workspaces", () => {
       json("POST", {
         name: "WORKSPACE FOR USER 1",
         description: "IT IS THE WORKSPACE FOR TEST STUFF",
+        icon: "book-open",
       }),
     );
     expect(res.status).toBe(200);
@@ -84,7 +86,6 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
   });
 });
 
-
 describe("PATCH /api/v1/workspaces/:workspaceId/icon", () => {
   it("updates only the icon", async () => {
     const app = makeApp();
@@ -97,7 +98,7 @@ describe("PATCH /api/v1/workspaces/:workspaceId/icon", () => {
 
     const res = await app.request(
       `/api/v1/workspaces/${ws!.id}/icon`,
-      json("PATCH", { newIcon  : "book" }),
+      json("PATCH", { newIcon: "book" }),
     );
     expect(res.status).toBe(200);
 
@@ -106,7 +107,7 @@ describe("PATCH /api/v1/workspaces/:workspaceId/icon", () => {
       .from(workspaces)
       .where(eq(workspaces.id, ws!.id));
     expect(after?.icon).toBe("book");
-    expect(after?.name).toBe(ws.name) // untouched
+    expect(after?.name).toBe(ws.name); // untouched
   });
 
   it("rejects invalid fields", async () => {
@@ -142,6 +143,7 @@ describe("DELETE /api/v1/workspaces/:workspaceId", () => {
       json("POST", {
         name: "my workspace",
         description: "This workspace exists",
+        icon: "book-open",
       }),
     );
     expect(createRes.status).toBe(200);
@@ -169,7 +171,11 @@ describe("IDOR: user 2 cannot touch user 1's workspace", () => {
     // user 1 creates a workspace
     const res = await makeApp(USER_1).request(
       "/api/v1/workspaces",
-      json("POST", { name: "private", description: "user 1 only" }),
+      json("POST", {
+        name: "private",
+        description: "user 1 only",
+        icon: "book-open",
+      }),
     );
     const body = (await res.json()) as any;
     wsId = body.data.id;

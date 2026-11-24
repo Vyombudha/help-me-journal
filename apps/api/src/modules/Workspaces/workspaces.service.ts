@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "../../../db";
 import { workspaces, type Workspace } from "../../../db/schema";
 import { NotFoundError } from "../../shared/errors/AppError";
+import type { PageIconName } from "../../shared/types/icons";
 
 const getAll = (ownerId: string): Promise<Workspace[]> =>
   db.select().from(workspaces).where(eq(workspaces.ownerId, ownerId));
@@ -10,10 +11,11 @@ const create = async (
   ownerId: string,
   name: string,
   description: string,
+  icon: PageIconName,
 ): Promise<Workspace> => {
   const [ws] = await db
     .insert(workspaces)
-    .values({ ownerId, name, description })
+    .values({ ownerId, name, description, icon })
     .returning();
   return ws!;
 };
@@ -85,7 +87,7 @@ const updateIcon = async (
     .returning();
   if (!ws) throw new NotFoundError();
   return ws;
-}
+};
 
 const remove = async (ownerId: string, workspaceId: string): Promise<void> => {
   const deleted = await db

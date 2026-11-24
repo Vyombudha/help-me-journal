@@ -25,6 +25,7 @@ const newWorkspace = factory.createHandlers(
       userId,
       body.name,
       body.description,
+      body.icon,
     );
     return c.json(
       {
@@ -95,9 +96,6 @@ const updateWorkspaceName = factory.createHandlers(
   },
 );
 
-
-
-
 const updateWorkspaceIcon = factory.createHandlers(
   sValidator("param", WorkspaceIdParamSchema),
   sValidator("json", UpdateWorkspaceIconSchema),
@@ -121,15 +119,6 @@ const updateWorkspaceIcon = factory.createHandlers(
     );
   },
 );
-
-
-
-
-
-
-
-
-
 
 const deleteWorkspace = factory.createHandlers(
   sValidator("param", WorkspaceIdParamSchema),
