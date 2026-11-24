@@ -49,7 +49,11 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
 
     const res = await app.request(
       `/api/v1/workspaces/${ws!.id}`,
-      json("PATCH", { newName: "Renamed", newDescription: ws!.description }),
+      json("PATCH", {
+        newName: "Renamed",
+        newDescription: ws!.description,
+        newIcon: "book-open",
+      }),
     );
     expect(res.status).toBe(200);
 
@@ -73,54 +77,6 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
     const res = await app.request(
       `/api/v1/workspaces/${ws!.id}`,
       json("PATCH", { name: "Renamed", describe: "Renamed Description" }),
-    );
-    expect(res.status).toBe(400);
-
-    const [after] = await db
-      .select()
-      .from(workspaces)
-      .where(eq(workspaces.id, ws!.id));
-    expect(after?.name).not.toBe("Renamed");
-    expect(after?.description).not.toBe("Renamed Description");
-  });
-});
-
-describe("PATCH /api/v1/workspaces/:workspaceId/icon", () => {
-  it("updates only the icon", async () => {
-    const app = makeApp();
-    await app.request("/api/v1/workspaces");
-
-    const [ws] = await db
-      .select()
-      .from(workspaces)
-      .where(eq(workspaces.ownerId, USER_1.id));
-
-    const res = await app.request(
-      `/api/v1/workspaces/${ws!.id}/icon`,
-      json("PATCH", { newIcon: "book" }),
-    );
-    expect(res.status).toBe(200);
-
-    const [after] = await db
-      .select()
-      .from(workspaces)
-      .where(eq(workspaces.id, ws!.id));
-    expect(after?.icon).toBe("book");
-    expect(after?.name).toBe(ws.name); // untouched
-  });
-
-  it("rejects invalid fields", async () => {
-    const app = makeApp();
-    await app.request("/api/v1/workspaces");
-
-    const [ws] = await db
-      .select()
-      .from(workspaces)
-      .where(eq(workspaces.ownerId, USER_1.id));
-
-    const res = await app.request(
-      `/api/v1/workspaces/${ws!.id}/icon`,
-      json("PATCH", { icon: "Renamed" }),
     );
     expect(res.status).toBe(400);
 
@@ -199,7 +155,11 @@ describe("IDOR: user 2 cannot touch user 1's workspace", () => {
 
     const res = await makeApp(USER_2).request(
       `/api/v1/workspaces/${wsId}`,
-      json("PATCH", { newName: "hacked", newDescription: "hacked workspace" }),
+      json("PATCH", {
+        newName: "hacked",
+        newDescription: "hacked workspace",
+        newIcon: "book-open",
+      }),
     );
     expect(res.status).toBe(404);
 

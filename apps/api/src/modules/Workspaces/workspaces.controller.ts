@@ -5,8 +5,6 @@ import type { AppEnv } from "../../shared/types/hono.js";
 import { sValidator } from "@hono/standard-validator";
 import {
   NewWorkspaceSchema,
-  UpdateWorkspaceIconInput,
-  UpdateWorkspaceIconSchema,
   UpdateWorkspaceSchema,
   WorkspaceIdParamSchema,
   type NewWorkspaceInput,
@@ -71,7 +69,7 @@ const getWorkspace = factory.createHandlers(
   },
 );
 
-const updateWorkspaceName = factory.createHandlers(
+const updateWorkspace = factory.createHandlers(
   sValidator("param", WorkspaceIdParamSchema),
   sValidator("json", UpdateWorkspaceSchema),
   async (c) => {
@@ -79,34 +77,11 @@ const updateWorkspaceName = factory.createHandlers(
     const { workspaceId } = c.req.valid("param");
     const body: UpdateWorkspaceInput = c.req.valid("json");
 
-    const updatedWorkspace: Workspace = await WorkspacesService.updateName(
+    const updatedWorkspace: Workspace = await WorkspacesService.update(
       userId,
       workspaceId,
       body.newName,
       body.newDescription,
-    );
-
-    return c.json(
-      {
-        success: true,
-        data: updatedWorkspace,
-      },
-      200,
-    );
-  },
-);
-
-const updateWorkspaceIcon = factory.createHandlers(
-  sValidator("param", WorkspaceIdParamSchema),
-  sValidator("json", UpdateWorkspaceIconSchema),
-  async (c) => {
-    const userId = c.get("userId");
-    const { workspaceId } = c.req.valid("param");
-    const body: UpdateWorkspaceIconInput = c.req.valid("json");
-
-    const updatedWorkspace: Workspace = await WorkspacesService.updateIcon(
-      userId,
-      workspaceId,
       body.newIcon,
     );
 
@@ -141,7 +116,6 @@ export const WorkspacesController = {
   new: newWorkspace,
   get: getWorkspace,
   getAll: getAllWorkspaces,
-  updateName: updateWorkspaceName,
-  updateIcon: updateWorkspaceIcon,
+  update: updateWorkspace,
   delete: deleteWorkspace,
 };

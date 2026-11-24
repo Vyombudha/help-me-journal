@@ -60,29 +60,16 @@ const get = async (
   return ws;
 };
 
-const updateName = async (
+const update = async (
   ownerId: string,
   workspaceId: string,
   newName: string,
   newDescription: string,
+  newIcon: PageIconName,
 ): Promise<Workspace> => {
   const [ws] = await db
     .update(workspaces)
-    .set({ name: newName, description: newDescription })
-    .where(and(eq(workspaces.id, workspaceId), eq(workspaces.ownerId, ownerId)))
-    .returning();
-  if (!ws) throw new NotFoundError();
-  return ws;
-};
-
-const updateIcon = async (
-  ownerId: string,
-  workspaceId: string,
-  newIcon: string,
-): Promise<Workspace> => {
-  const [ws] = await db
-    .update(workspaces)
-    .set({ icon: newIcon })
+    .set({ name: newName, description: newDescription, icon: newIcon })
     .where(and(eq(workspaces.id, workspaceId), eq(workspaces.ownerId, ownerId)))
     .returning();
   if (!ws) throw new NotFoundError();
@@ -101,7 +88,6 @@ export const WorkspacesService = {
   get,
   new: create,
   getAllOrCreateDefault,
-  updateName,
-  updateIcon,
+  update,
   delete: remove,
 };
