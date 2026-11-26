@@ -48,9 +48,9 @@ export default function CreateWorkspace({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>New Project</DialogTitle>
+          <DialogTitle>New Workspace</DialogTitle>
           <DialogDescription>
-            Put the name and description of your new project here. Click save
+            Put the name and description of your new workspace here. Click save
             when you&apos;re done.
           </DialogDescription>
         </DialogHeader>

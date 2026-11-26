@@ -52,10 +52,10 @@ export default function EditWorkspace({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>New Project</DialogTitle>
+          <DialogTitle>Edit Workspace</DialogTitle>
           <DialogDescription>
-            Put the name and description of your new project here. Click save
-            when you&apos;re done.
+            Put the updated name and description of your new workspace here.
+            Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
 
