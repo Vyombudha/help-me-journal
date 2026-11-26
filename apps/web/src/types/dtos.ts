@@ -2,6 +2,7 @@
 
 import type { Mood } from "@help-me-journal/shared/data/moods"
 import type { WorkspaceStatus } from "@help-me-journal/shared/data/statuses"
+import type { PageIconName } from "@help-me-journal/shared/icons"
 import type { IconName } from "lucide-react/dynamic"
 
 // ---- Resources ----
@@ -19,7 +20,7 @@ export interface WorkspaceDTO {
   description: string
   isDefault: boolean
   ownerId: string
-  icon: IconName
+  icon: PageIconName
   createdAt: string
   updatedAt: string
   status: WorkspaceStatus

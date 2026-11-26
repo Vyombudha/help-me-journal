@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../../../db";
-import { workspaces, type Workspace } from "../../../db/schema";
+import { users, workspaces, type Workspace } from "../../../db/schema";
 import { NotFoundError } from "../../shared/errors/AppError";
 import type { PageIconName } from "@help-me-journal/shared/icons";
 
@@ -34,12 +34,13 @@ const getAllOrCreateDefault = async (ownerId: string): Promise<Workspace[]> => {
     return getAll(ownerId);
   }
 
+  const [user] = await db.select().from(users).where(eq(users.id, ownerId));
   const [ws] = await db
     .insert(workspaces)
     .values({
       ownerId,
-      name: "My Workspace",
-      description: "",
+      name: `${user.name}'s Workspace`,
+      description: `${user.name}'s default workspace. You can change this later.`,
       isDefault: true,
     })
     .returning();
