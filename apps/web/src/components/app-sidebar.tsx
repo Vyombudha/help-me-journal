@@ -53,7 +53,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     workspaces?.map((workspace) => ({
       id: workspace.id,
       name: workspace.name,
-      logo: <DynamicIcon name={workspace.icon ?? "audio-lines"} />,
+      description: workspace.description,
+      logo: workspace.icon ?? "audio-lines",
       status: workspace.status,
     })) ?? []
   const sidebarUser = {

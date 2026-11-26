@@ -7,13 +7,17 @@ import {
   DropdownMenuSubContent,
 } from "./ui/dropdown-menu"
 import type { WorkspaceItem } from "./workspace-switcher"
+import { DynamicIcon } from "lucide-react/dynamic"
+import { comingSoon } from "@/lib/utils"
 
 function WorkspaceCard({
   workspace,
   onDelete,
+  onEdit,
 }: {
   workspace: WorkspaceItem
-  onDelete: () => void
+  onDelete: (workspace: WorkspaceItem) => void
+  onEdit: (workspace: WorkspaceItem) => void
 }) {
   const navigate = useNavigate()
   return (
@@ -25,7 +29,7 @@ function WorkspaceCard({
       >
         <div className="flex size-6 items-center justify-center rounded-md border">
           <span className="flex shrink-0 items-center [&>svg]:size-3.5 [&>svg]:shrink-0">
-            {workspace.logo}
+            <DynamicIcon name={workspace.logo} />
           </span>
         </div>
         {workspace.name}
@@ -34,14 +38,14 @@ function WorkspaceCard({
       <DropdownMenuSubContent className="min-w-44">
         <DropdownMenuItem
           onClick={() => {
-            /* open edit dialog */
+            onEdit(workspace)
           }}
         >
           <Pencil /> Edit
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
-            /* set default mutation */
+            comingSoon("Changing Default Workspaces")
           }}
         >
           <Star /> Make default
@@ -49,7 +53,7 @@ function WorkspaceCard({
         <DropdownMenuItem
           variant="destructive"
           onClick={() => {
-            onDelete()
+            onDelete(workspace)
           }}
         >
           <Trash2 /> Delete workspace

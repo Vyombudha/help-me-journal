@@ -21,17 +21,22 @@ import CreateWorkspace from "./CreateWorkspace"
 import {
   useCreateWorkspace,
   useDeleteWorkspace,
+  useUpdateWorkspace,
 } from "@/hooks/useWorkspaceMutations"
 import { toast } from "./ui/toast"
 import { useParams } from "react-router-dom"
 import WorkspaceCard from "./WorkspaceCard"
 import ConfirmDelete from "./ConfirmDelete"
+import EditWorkspace from "./EditWorkspace"
+import type { PageIconName } from "@help-me-journal/shared/icons"
+import { DynamicIcon } from "lucide-react/dynamic"
 
 export type WorkspaceItem = {
   id: string
   name: string
-  logo: React.ReactNode
+  logo: PageIconName
   status: WorkspaceStatus
+  description: string
 }
 
 export function WorkspaceSwticher({
@@ -51,8 +56,12 @@ export function WorkspaceSwticher({
   const activeWorkspace =
     workspaces.find((w) => w.id === workspaceId) ?? workspaces[0]
   const createWorkspace = useCreateWorkspace()
-  const [deleteTarget, setDeleteTarget] = React.useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = React.useState<WorkspaceItem | null>(
+    null
+  )
+  const [editTarget, setEditTarget] = React.useState<WorkspaceItem | null>(null)
   const deleteWorkspace = useDeleteWorkspace()
+  const updateWorkspace = useUpdateWorkspace()
   if (!activeWorkspace) {
     return null
   }
@@ -70,7 +79,7 @@ export function WorkspaceSwticher({
             }
           >
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              {activeWorkspace.logo}
+              <DynamicIcon name={activeWorkspace.logo} />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">
@@ -100,7 +109,8 @@ export function WorkspaceSwticher({
                 <WorkspaceCard
                   key={workspace.id}
                   workspace={workspace}
-                  onDelete={() => setDeleteTarget(workspace.id)}
+                  onDelete={setDeleteTarget}
+                  onEdit={setEditTarget}
                 />
               ))}
             </DropdownMenuGroup>
@@ -129,6 +139,31 @@ export function WorkspaceSwticher({
             })
           }}
         />
+        {editTarget && (
+          <EditWorkspace
+            key={editTarget.id}
+            open
+            name={editTarget.name}
+            description={editTarget.description}
+            icon={editTarget.logo}
+            onOpenChange={(open) => {
+              if (!open) setEditTarget(null)
+            }}
+            onConfirm={(newWorkspaceData) => {
+              toast.promise(
+                updateWorkspace.mutateAsync({
+                  id: editTarget.id,
+                  ...newWorkspaceData,
+                }),
+                {
+                  loading: "Updating Workspace",
+                  success: "Workspace Updated",
+                  error: "Failed to Update Workspace",
+                }
+              )
+            }}
+          />
+        )}
         <ConfirmDelete
           open={deleteTarget !== null}
           onOpenChange={(open) => {
@@ -136,7 +171,7 @@ export function WorkspaceSwticher({
           }}
           onConfirm={() => {
             if (!deleteTarget) return
-            toast.promise(deleteWorkspace.mutateAsync(deleteTarget), {
+            toast.promise(deleteWorkspace.mutateAsync(deleteTarget.id), {
               loading: "Deleting Workspace",
               success: "Workspace Deleted",
               error: "Failed to Delete Workspace",
