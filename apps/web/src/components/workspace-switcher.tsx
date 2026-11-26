@@ -8,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -19,11 +18,16 @@ import {
 } from "@/components/ui/sidebar"
 import type { NewWorkspaceInput } from "@help-me-journal/shared/schema"
 import CreateWorkspace from "./CreateWorkspace"
-import { useCreateWorkspace } from "@/hooks/useWorkspaceMutations"
+import {
+  useCreateWorkspace,
+  useDeleteWorkspace,
+} from "@/hooks/useWorkspaceMutations"
 import { toast } from "./ui/toast"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import WorkspaceCard from "./WorkspaceCard"
+import ConfirmDelete from "./ConfirmDelete"
 
-type WorkspaceItem = {
+export type WorkspaceItem = {
   id: string
   name: string
   logo: React.ReactNode
@@ -36,7 +40,6 @@ export function WorkspaceSwticher({
   workspaces?: WorkspaceItem[]
 }) {
   const { workspaceId } = useParams<{ workspaceId: string }>()
-  const navigate = useNavigate()
   const { isMobile } = useSidebar()
   const [menuOpen, setMenuOpen] = React.useState(false)
   // Derive the active workspace; falls back to the first until the user picks one.
@@ -48,6 +51,8 @@ export function WorkspaceSwticher({
   const activeWorkspace =
     workspaces.find((w) => w.id === workspaceId) ?? workspaces[0]
   const createWorkspace = useCreateWorkspace()
+  const [deleteTarget, setDeleteTarget] = React.useState<string | null>(null)
+  const deleteWorkspace = useDeleteWorkspace()
   if (!activeWorkspace) {
     return null
   }
@@ -80,7 +85,6 @@ export function WorkspaceSwticher({
             </div>
             <ChevronsUpDown className="ml-auto" />
           </DropdownMenuTrigger>
-
           <DropdownMenuContent
             className="w-(--anchor-width) min-w-56 rounded-lg"
             align="start"
@@ -92,20 +96,12 @@ export function WorkspaceSwticher({
               <DropdownMenuLabel className="text-xs text-muted-foreground">
                 Workspaces
               </DropdownMenuLabel>
-              {workspaces.map((workspace, index) => (
-                <DropdownMenuItem
+              {workspaces.map((workspace) => (
+                <WorkspaceCard
                   key={workspace.id}
-                  onClick={() => navigate(`/w/${workspace.id}`)}
-                  className="gap-2 p-2"
-                >
-                  <div className="flex size-6 items-center justify-center rounded-md border">
-                    <span className="flex shrink-0 items-center [&>svg]:size-3.5 [&>svg]:shrink-0">
-                      {workspace.logo}
-                    </span>{" "}
-                  </div>
-                  {workspace.name}
-                  <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-                </DropdownMenuItem>
+                  workspace={workspace}
+                  onDelete={() => setDeleteTarget(workspace.id)}
+                />
               ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -130,6 +126,20 @@ export function WorkspaceSwticher({
               loading: `Creating Workspace`,
               success: `Workspace Created`,
               error: `Failed to Create Workspace`,
+            })
+          }}
+        />
+        <ConfirmDelete
+          open={deleteTarget !== null}
+          onOpenChange={(open) => {
+            if (!open) setDeleteTarget(null)
+          }}
+          onConfirm={() => {
+            if (!deleteTarget) return
+            toast.promise(deleteWorkspace.mutateAsync(deleteTarget), {
+              loading: "Deleting Workspace",
+              success: "Workspace Deleted",
+              error: "Failed to Delete Workspace",
             })
           }}
         />
