@@ -48,11 +48,15 @@ export function NavPages({
     id: string
     isActive: boolean
   } | null>(null)
+  const COLLAPSED_COUNT = 4
+  const [expanded, setExpanded] = useState(false)
+  const visiblePages = expanded ? pages : pages.slice(0, COLLAPSED_COUNT)
+  const hasOverflow = pages.length > COLLAPSED_COUNT
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Context Pages</SidebarGroupLabel>
       <SidebarMenu>
-        {pages.map((item) => (
+        {visiblePages.map((item) => (
           <SidebarMenuItem key={item.id}>
             <SidebarMenuButton
               isActive={item.isActive}
@@ -138,12 +142,14 @@ export function NavPages({
             )
           }}
         />
-        <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontalIcon className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        {hasOverflow && (
+          <SidebarMenuItem onClick={() => setExpanded((prev) => !prev)}>
+            <SidebarMenuButton className="text-sidebar-foreground/70">
+              <MoreHorizontalIcon className="text-sidebar-foreground/70" />
+              <span>{expanded ? "less" : "more"}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )}
       </SidebarMenu>
     </SidebarGroup>
   )

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ChevronsUpDown, Plus } from "lucide-react"
+import { ChevronsUpDown, MoreHorizontalIcon, Plus } from "lucide-react"
 import type { WorkspaceStatus } from "@help-me-journal/shared/data/statuses"
 import {
   DropdownMenu,
@@ -62,6 +62,13 @@ export function WorkspaceSwticher({
   const [editTarget, setEditTarget] = React.useState<WorkspaceItem | null>(null)
   const deleteWorkspace = useDeleteWorkspace()
   const updateWorkspace = useUpdateWorkspace()
+
+  const COLLAPSED_COUNT = 4
+  const [expanded, setExpanded] = React.useState(false)
+  const visibleWorkspaces = expanded
+    ? workspaces
+    : workspaces.slice(0, COLLAPSED_COUNT)
+  const hasOverflow = workspaces.length > COLLAPSED_COUNT
   if (!activeWorkspace) {
     return null
   }
@@ -105,7 +112,7 @@ export function WorkspaceSwticher({
               <DropdownMenuLabel className="text-xs text-muted-foreground">
                 Workspaces
               </DropdownMenuLabel>
-              {workspaces.map((workspace) => (
+              {visibleWorkspaces.map((workspace) => (
                 <WorkspaceCard
                   key={workspace.id}
                   workspace={workspace}
@@ -114,7 +121,16 @@ export function WorkspaceSwticher({
                 />
               ))}
             </DropdownMenuGroup>
+            {hasOverflow && (
+              <SidebarMenuItem onClick={() => setExpanded((prev) => !prev)}>
+                <SidebarMenuButton className="text-sidebar-foreground/70">
+                  <MoreHorizontalIcon className="text-sidebar-foreground/70" />
+                  <span>{expanded ? "more" : "less"}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
             <DropdownMenuSeparator />
+
             <DropdownMenuItem
               className="gap-2 p-2"
               onClick={() => setMenuOpen(true)}
