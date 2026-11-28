@@ -18,9 +18,9 @@ import {
 } from "@/components/ui/sidebar"
 import {
   MoreHorizontalIcon,
-  ArrowRightIcon,
   Trash2Icon,
-  View,
+  Share2,
+  ExternalLink,
 } from "lucide-react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import ConfirmDelete from "./ConfirmDelete"
@@ -88,8 +88,8 @@ export function NavPages({
                     navigate(`/w/${workspaceId}/p/${item.id}`)
                   }}
                 >
-                  <View />
-                  <span>View Page</span>
+                  <ExternalLink />
+                  <span>Goto Page</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
@@ -101,8 +101,8 @@ export function NavPages({
                     })
                   }}
                 >
-                  <ArrowRightIcon />
-                  <span>Share Page As Md</span>
+                  <Share2 />
+                  <span>Share</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem

@@ -83,6 +83,7 @@ const updateWorkspace = factory.createHandlers(
       body.newName,
       body.newDescription,
       body.newIcon,
+      body.newStatus,
     );
 
     return c.json(

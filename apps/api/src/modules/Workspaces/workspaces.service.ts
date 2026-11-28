@@ -3,6 +3,7 @@ import { db } from "../../../db";
 import { users, workspaces, type Workspace } from "../../../db/schema";
 import { NotFoundError } from "../../shared/errors/AppError";
 import type { PageIconName } from "@help-me-journal/shared/icons";
+import { WorkspaceStatus } from "@help-me-journal/shared/data/statuses";
 
 const getAll = (ownerId: string): Promise<Workspace[]> =>
   db.select().from(workspaces).where(eq(workspaces.ownerId, ownerId));
@@ -67,10 +68,16 @@ const update = async (
   newName: string,
   newDescription: string,
   newIcon: PageIconName,
+  newStatus: WorkspaceStatus,
 ): Promise<Workspace> => {
   const [ws] = await db
     .update(workspaces)
-    .set({ name: newName, description: newDescription, icon: newIcon })
+    .set({
+      name: newName,
+      description: newDescription,
+      icon: newIcon,
+        status: newStatus,
+    })
     .where(and(eq(workspaces.id, workspaceId), eq(workspaces.ownerId, ownerId)))
     .returning();
   if (!ws) throw new NotFoundError();

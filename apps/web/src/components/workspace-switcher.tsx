@@ -30,6 +30,7 @@ import ConfirmDelete from "./ConfirmDelete"
 import EditWorkspace from "./EditWorkspace"
 import type { PageIconName } from "@help-me-journal/shared/icons"
 import { DynamicIcon } from "lucide-react/dynamic"
+import { STATUS } from "@/lib/utils"
 
 export type WorkspaceItem = {
   id: string
@@ -48,11 +49,7 @@ export function WorkspaceSwticher({
   const { isMobile } = useSidebar()
   const [menuOpen, setMenuOpen] = React.useState(false)
   // Derive the active workspace; falls back to the first until the user picks one.
-  const STATUS: Record<WorkspaceStatus, { label: string; dot: string }> = {
-    IN_PROGRESS: { label: "In progress", dot: "bg-yellow-400" },
-    COMPLETED: { label: "Completed", dot: "bg-green-400" },
-    ABANDONED: { label: "Abandoned", dot: "bg-red-400" },
-  }
+
   const activeWorkspace =
     workspaces.find((w) => w.id === workspaceId) ?? workspaces[0]
   const createWorkspace = useCreateWorkspace()
@@ -165,6 +162,7 @@ export function WorkspaceSwticher({
             onOpenChange={(open) => {
               if (!open) setEditTarget(null)
             }}
+            status={editTarget.status}
             onConfirm={(newWorkspaceData) => {
               toast.promise(
                 updateWorkspace.mutateAsync({
