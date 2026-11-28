@@ -123,7 +123,7 @@ export function WorkspaceSwticher({
               <SidebarMenuItem onClick={() => setExpanded((prev) => !prev)}>
                 <SidebarMenuButton className="text-sidebar-foreground/70">
                   <MoreHorizontalIcon className="text-sidebar-foreground/70" />
-                  <span>{expanded ? "more" : "less"}</span>
+                  <span>{expanded ? "less" : "more"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
