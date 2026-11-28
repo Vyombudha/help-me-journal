@@ -14,5 +14,5 @@ export const apiLimiter = createMiddleware<AppEnv>(async (c, next) => {
       c.req.header("cf-connecting-ip") ?? "anonymous",
     message: { error: "Too many requests, please try again later." },
   });
-  return (limiter as any)(c, next);
+  return (limiter as any)(c, next);  
 });

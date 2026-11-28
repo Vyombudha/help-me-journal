@@ -17,16 +17,27 @@ import type { PageIconName } from "@help-me-journal/shared/icons"
 import { UpdateWorkspaceSchema } from "@help-me-journal/shared/schema"
 import { toast } from "./ui/toast"
 import type { UpdateWorkspaceTypes } from "@/types/UpdateWorkspace.types"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select"
+import type { WorkspaceStatus } from "@help-me-journal/shared/data/statuses"
 
 export default function EditWorkspace({
   name,
   description,
   icon,
   open,
+  status,
   onOpenChange,
   onConfirm,
 }: UpdateWorkspaceTypes) {
   const [iconName, setIconName] = useState<PageIconName>(icon)
+  const [newstatus, setNewStatus] = useState<WorkspaceStatus>(status)
   function handleSubmission(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
@@ -47,7 +58,11 @@ export default function EditWorkspace({
     onConfirm(result.data) // trimmed, validated, correctly typed
     onOpenChange(false) // close the dialog after confirming
   }
-
+  const statusSelect: { label: string; value: WorkspaceStatus }[] = [
+    { label: "in progress", value: "IN_PROGRESS" },
+    { label: "done", value: "COMPLETED" },
+    { label: "abandoned", value: "ABANDONED" },
+  ]
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-sm">
@@ -73,6 +88,27 @@ export default function EditWorkspace({
                 defaultValue={description}
                 required
               />
+            </Field>
+
+            <Field>
+              <Select
+                items={statusSelect}
+                defaultValue={newstatus}
+                onValueChange={(v) => v && setNewStatus(v as WorkspaceStatus)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {statusSelect.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </Field>
             <Field>
               <Label>Icon</Label>

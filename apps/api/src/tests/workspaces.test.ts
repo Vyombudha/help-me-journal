@@ -1,8 +1,15 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "../../db";
-import { pages, users, workspaces } from "../../db/schema";
+import {
+  pages,
+  users,
+  WORKSPACE_STATUSES,
+  workspaces,
+  WorkspaceStatus,
+} from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { USER_1, USER_2, makeApp, json } from "./test.setup";
+import { UpdateWorkspaceSchema } from "@help-me-journal/shared/schema";
 
 beforeEach(async () => {
   await db.delete(users);
@@ -53,6 +60,7 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
         newName: "Renamed",
         newDescription: ws!.description,
         newIcon: "book-open",
+        newStatus: "IN_PROGRESS",
       }),
     );
     expect(res.status).toBe(200);
@@ -159,6 +167,7 @@ describe("IDOR: user 2 cannot touch user 1's workspace", () => {
         newName: "hacked",
         newDescription: "hacked workspace",
         newIcon: "book-open",
+        newStatus: "ABANDONED",
       }),
     );
     expect(res.status).toBe(404);
@@ -168,6 +177,7 @@ describe("IDOR: user 2 cannot touch user 1's workspace", () => {
       .from(workspaces)
       .where(eq(workspaces.id, wsId));
     expect(row?.name).toBe("private"); // unchanged
+    expect(row?.status).toBe("IN_PROGRESS"); // untouched
   });
 
   it("cannot delete it", async () => {
