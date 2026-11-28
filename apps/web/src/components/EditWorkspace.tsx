@@ -25,7 +25,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select"
-import type { WorkspaceStatus } from "@help-me-journal/shared/data/statuses"
+import {
+  WORKSPACE_STATUSES,
+  type WorkspaceStatus,
+} from "@help-me-journal/shared/data/statuses"
 
 export default function EditWorkspace({
   name,
@@ -37,7 +40,7 @@ export default function EditWorkspace({
   onConfirm,
 }: UpdateWorkspaceTypes) {
   const [iconName, setIconName] = useState<PageIconName>(icon)
-  const [newstatus, setNewStatus] = useState<WorkspaceStatus>(status)
+  const [newStatus, setNewStatus] = useState<WorkspaceStatus>(status)
   function handleSubmission(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
@@ -45,6 +48,7 @@ export default function EditWorkspace({
       newName: formData.get("name"),
       newDescription: formData.get("description"),
       newIcon: iconName,
+      newStatus,
     })
 
     if (!result.success) {
@@ -59,9 +63,9 @@ export default function EditWorkspace({
     onOpenChange(false) // close the dialog after confirming
   }
   const statusSelect: { label: string; value: WorkspaceStatus }[] = [
-    { label: "in progress", value: "IN_PROGRESS" },
-    { label: "done", value: "COMPLETED" },
-    { label: "abandoned", value: "ABANDONED" },
+    { label: "in progress", value: WORKSPACE_STATUSES[0] },
+    { label: "done", value: WORKSPACE_STATUSES[1] },
+    { label: "abandoned", value: WORKSPACE_STATUSES[2] },
   ]
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -91,9 +95,10 @@ export default function EditWorkspace({
             </Field>
 
             <Field>
+              <Label>Status</Label>
               <Select
                 items={statusSelect}
-                defaultValue={newstatus}
+                defaultValue={newStatus}
                 onValueChange={(v) => v && setNewStatus(v as WorkspaceStatus)}
               >
                 <SelectTrigger>

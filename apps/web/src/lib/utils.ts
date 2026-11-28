@@ -1,6 +1,7 @@
 import type { PartialBlock } from "@blocknote/core"
 import { api } from "@/lib/api"
 import { toast } from "@/components/ui/toast"
+import type { WorkspaceStatus } from "@help-me-journal/shared/data/statuses"
 
 type StoredBlock = {
   id?: string
@@ -63,4 +64,10 @@ export function parseContent(
   } catch {
     return undefined
   }
+}
+
+export const STATUS: Record<WorkspaceStatus, { label: string; dot: string }> = {
+  IN_PROGRESS: { label: "In progress", dot: "bg-yellow-400" },
+  COMPLETED: { label: "Completed", dot: "bg-green-400" },
+  ABANDONED: { label: "Abandoned", dot: "bg-red-400" },
 }
