@@ -76,12 +76,37 @@ const update = async (
       name: newName,
       description: newDescription,
       icon: newIcon,
-        status: newStatus,
+      status: newStatus,
     })
     .where(and(eq(workspaces.id, workspaceId), eq(workspaces.ownerId, ownerId)))
     .returning();
   if (!ws) throw new NotFoundError();
   return ws;
+};
+
+const setDefaultWorkspace = async (
+  ownerId: string,
+  workspaceId: string,
+): Promise<Workspace> => {
+  const targetWs = await get(ownerId, workspaceId);
+  if (targetWs.isDefault) return targetWs;
+  const [, [updated]] = await db.batch([
+    db
+      .update(workspaces)
+      .set({ isDefault: false })
+      .where(
+        and(eq(workspaces.ownerId, ownerId), eq(workspaces.isDefault, true)),
+      ),
+    db
+      .update(workspaces)
+      .set({ isDefault: true })
+      .where(
+        and(eq(workspaces.id, workspaceId), eq(workspaces.ownerId, ownerId)),
+      )
+      .returning(),
+  ]);
+
+  return updated;
 };
 
 const remove = async (ownerId: string, workspaceId: string): Promise<void> => {
@@ -97,5 +122,6 @@ export const WorkspacesService = {
   new: create,
   getAllOrCreateDefault,
   update,
+  setDefault: setDefaultWorkspace,
   delete: remove,
 };

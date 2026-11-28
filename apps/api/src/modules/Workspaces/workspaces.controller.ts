@@ -96,6 +96,22 @@ const updateWorkspace = factory.createHandlers(
   },
 );
 
+const setDefaultWorkspsce = factory.createHandlers(
+  sValidator("param", WorkspaceIdParamSchema),
+  async (c) => {
+    const userId = c.get("userId");
+    const { workspaceId } = c.req.valid("param");
+    const updatedWs = await WorkspacesService.setDefault(userId, workspaceId);
+    return c.json(
+      {
+        success: true,
+        data: updatedWs,
+      },
+      200,
+    );
+  },
+);
+
 const deleteWorkspace = factory.createHandlers(
   sValidator("param", WorkspaceIdParamSchema),
   async (c) => {
@@ -116,7 +132,8 @@ const deleteWorkspace = factory.createHandlers(
 export const WorkspacesController = {
   new: newWorkspace,
   get: getWorkspace,
+  setDefault: setDefaultWorkspsce,
   getAll: getAllWorkspaces,
-  update: updateWorkspace,
+  put: updateWorkspace,
   delete: deleteWorkspace,
 };

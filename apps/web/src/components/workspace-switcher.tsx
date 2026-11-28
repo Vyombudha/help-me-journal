@@ -38,6 +38,7 @@ export type WorkspaceItem = {
   logo: PageIconName
   status: WorkspaceStatus
   description: string
+  isDefault: boolean
 }
 
 export function WorkspaceSwticher({

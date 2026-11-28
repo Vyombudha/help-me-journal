@@ -8,7 +8,8 @@ import {
 } from "./ui/dropdown-menu"
 import type { WorkspaceItem } from "./workspace-switcher"
 import { DynamicIcon } from "lucide-react/dynamic"
-import { comingSoon } from "@/lib/utils"
+import { useSetDefaultWorkspace } from "@/hooks/useWorkspaceMutations"
+import { toast } from "./ui/toast"
 
 function WorkspaceCard({
   workspace,
@@ -20,6 +21,7 @@ function WorkspaceCard({
   onEdit: (workspace: WorkspaceItem) => void
 }) {
   const navigate = useNavigate()
+  const setDefaultWs = useSetDefaultWorkspace()
   return (
     <DropdownMenuSub>
       <DropdownMenuSubTrigger
@@ -45,10 +47,19 @@ function WorkspaceCard({
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
-            comingSoon("Changing Default Workspaces")
+            toast.promise(setDefaultWs.mutateAsync({ id: workspace.id }), {
+              loading: "Setting as Default",
+              success: "Set as Default",
+              error: "Failed to Set as Defaut",
+            })
           }}
         >
-          <Star /> Make default
+          <Star
+            className={
+              workspace.isDefault ? "fill-yellow-500 text-yellow-500" : ""
+            }
+          />
+          Make Default
         </DropdownMenuItem>
         <DropdownMenuItem
           variant="destructive"

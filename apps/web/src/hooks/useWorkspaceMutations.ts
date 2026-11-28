@@ -30,9 +30,24 @@ export function useUpdateWorkspace() {
       id,
       ...updatedWorkspace
     }: UpdateWorkspaceInput & { id: string }) => {
-      const { data } = await api.patch<SuccessResponse<WorkspaceDTO>>(
+      const { data } = await api.put<SuccessResponse<WorkspaceDTO>>(
         `/workspaces/${id}`,
         updatedWorkspace
+      )
+      return data.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workspaces"] })
+    },
+  })
+}
+
+export function useSetDefaultWorkspace() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      const { data } = await api.put<SuccessResponse<WorkspaceDTO>>(
+        `/workspaces/${id}/set-default`
       )
       return data.data
     },
