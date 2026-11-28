@@ -56,6 +56,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       description: workspace.description,
       logo: workspace.icon ?? "audio-lines",
       status: workspace.status,
+      isDefault: workspace.isDefault,
     })) ?? []
   const sidebarUser = {
     name: user?.fullName ?? "User",

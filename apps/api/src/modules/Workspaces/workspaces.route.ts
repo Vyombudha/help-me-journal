@@ -9,8 +9,12 @@ WorkspacesRouter.post("/", ...WorkspacesController.new);
 
 WorkspacesRouter.get("/:workspaceId", ...WorkspacesController.get);
 
-WorkspacesRouter.patch("/:workspaceId", ...WorkspacesController.update);
+WorkspacesRouter.put("/:workspaceId", ...WorkspacesController.put);
 
+WorkspacesRouter.put(
+  "/:workspaceId/set-default",
+  ...WorkspacesController.setDefault,
+);
 WorkspacesRouter.delete("/:workspaceId", ...WorkspacesController.delete);
 
 export { WorkspacesRouter };

@@ -44,8 +44,8 @@ describe("POST /api/v1/workspaces", () => {
   });
 });
 
-describe("PATCH /api/v1/workspaces/:workspaceId", () => {
-  it("updates only the given fields", async () => {
+describe("PUT /api/v1/workspaces/:workspaceId", () => {
+  it("replaces the given fields", async () => {
     const app = makeApp();
     await app.request("/api/v1/workspaces");
 
@@ -56,9 +56,9 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
 
     const res = await app.request(
       `/api/v1/workspaces/${ws!.id}`,
-      json("PATCH", {
+      json("PUT", {
         newName: "Renamed",
-        newDescription: ws!.description,
+        newDescription: ws!.description + "replaced",
         newIcon: "book-open",
         newStatus: "IN_PROGRESS",
       }),
@@ -69,11 +69,11 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
       .select()
       .from(workspaces)
       .where(eq(workspaces.id, ws!.id));
-    expect(after?.name).toBe("Renamed");
-    expect(after?.description).toBe(ws!.description); // untouched
+    expect(after?.name).toBe("Renamed"); // replaced with new
+    expect(after?.description).toBe(ws!.description + "replaced"); // replaced with new
   });
 
-  it("rejects invalid fields", async () => {
+  it("rejects invalidated body as a whole", async () => {
     const app = makeApp();
     await app.request("/api/v1/workspaces");
 
@@ -84,7 +84,12 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
 
     const res = await app.request(
       `/api/v1/workspaces/${ws!.id}`,
-      json("PATCH", { name: "Renamed", describe: "Renamed Description" }),
+      json("PUT", {
+        newName: "", //  this is unvalid
+        newDescription: "this is completely valid updated description body", // valid
+        newIcon: "invalid-icon", // this is also invalid
+        newStatus: ws.status, // valid
+      }),
     );
     expect(res.status).toBe(400);
 
@@ -92,14 +97,49 @@ describe("PATCH /api/v1/workspaces/:workspaceId", () => {
       .select()
       .from(workspaces)
       .where(eq(workspaces.id, ws!.id));
-    expect(after?.name).not.toBe("Renamed");
-    expect(after?.description).not.toBe("Renamed Description");
+    expect(after).toEqual(ws); // nothing changed at all
+  });
+});
+
+describe("PUT /api/v1/workspaces/:workspaceId/set-default", () => {
+  it("sets given workspace as new default", async () => {
+    const app = makeApp();
+    await app.request("/api/v1/workspaces");
+    const [oldDefaultWs] = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.ownerId, USER_1.id));
+    expect(oldDefaultWs!.isDefault).toBe(true);
+    const [newWs] = await db
+      .insert(workspaces)
+      .values({
+        ownerId: USER_1.id,
+        name: "new-default-ws",
+        description: "this will now be default workspace",
+        icon: "book-open",
+      })
+      .returning();
+
+    expect(newWs.isDefault).toBe(false);
+    const res = await app.request(
+      `/api/v1/workspaces/${newWs!.id}/set-default`,
+      json("PUT"),
+    );
+    expect(res.status).toBe(200);
+
+    const all = await db
+      .select()
+      .from(workspaces)
+      .where(eq(workspaces.ownerId, USER_1.id));
+    expect(all.filter((w) => w.isDefault)).toHaveLength(1);
+    expect(all.find((w) => w.isDefault)?.id).toBe(newWs!.id);
   });
 });
 
 describe("DELETE /api/v1/workspaces/:workspaceId", () => {
   it("removes the workspace and its pages", async () => {
     const app = makeApp();
+
     // 1. create a workspace through the API
     const createRes = await app.request(
       "/api/v1/workspaces",
@@ -163,7 +203,7 @@ describe("IDOR: user 2 cannot touch user 1's workspace", () => {
 
     const res = await makeApp(USER_2).request(
       `/api/v1/workspaces/${wsId}`,
-      json("PATCH", {
+      json("PUT", {
         newName: "hacked",
         newDescription: "hacked workspace",
         newIcon: "book-open",
